@@ -1,5 +1,5 @@
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6ed1693c-fff9-41b2-a44e-4f7e01c3ed6f/Frame.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6ed1693c-fff9-41b2-a44e-4f7e01c3ed6f/Frame.png)
+<img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F6ed1693c-fff9-41b2-a44e-4f7e01c3ed6f%2FFrame.png?table=block&id=b9b246c0-1d17-4da6-9fc8-1946c380c078&width=400&userId=&cache=v2" alt="traveller logo" />
 
 ### Funcionalidades
 
@@ -9,7 +9,7 @@ Lembrando que o intuito desse documento é apenas para te auxiliar. Você deve s
 
 ### **1. Autenticação**
 
-Você deverá permitir a criação e autenticação de usuários na aplicação. Esses usuários serão administradores. Os administradores terão permissão para alterar o conteúdo que os usuários finais terão acesso. 
+Você deverá permitir a criação e autenticação de usuários na aplicação. Esses usuários serão administradores. Os administradores terão permissão para alterar o conteúdo que os usuários finais terão acesso.
 
 Para isso, você pode criar uma tabela `users` onde serão armazenados os usuários para que essas informações sejam usadas em qualquer rota que necessite de autenticação.
 
