@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  justify-items: center;
+  padding: 2rem 8%;
+}
+
+.container button {
+  width: 174px;
+  height: 48px;
+  border: none;
+  background: #dde9f0;
+  border-radius: 10px;
+  color: var(--secundary);
+  font-weight: bold;
+  transition: 0.5s;
+  margin: 0 8px;
+}
+
+.container button:hover {
+  filter: brightness(95%);
+}
+
+@media (max-width: 800px) {
+  .container {
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+  .container img {
+    margin: 0 8px;
+  }
+  .container button {
+    margin: 8px 0;
+  }
+}

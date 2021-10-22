@@ -1,14 +1,23 @@
+:root {
+  --background: #f5f8fa;
+  --primary: #f25d27;
+  --secundary: #115d8c;
+  --text: #617480;
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: 'Barlow', sans-serif;
+  background-color: var(--background);
 }
 
-a {
+a,
+button {
   color: inherit;
   text-decoration: none;
+  cursor: pointer;
 }
 
 * {
