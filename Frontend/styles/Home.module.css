@@ -2,6 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: flex-start;
   padding: 4% 8%;
 }
 
@@ -38,6 +39,20 @@
 }
 .mainContent .callToAction:hover {
   filter: brightness(105%);
+}
+
+@media (max-width: 1050px) {
+  .mainContent > section:nth-child(1) {
+    display: block;
+    min-width: 100%;
+    text-align: center;
+    margin-bottom: 80px;
+  }
+  .mainContent > section:nth-child(2) {
+    margin-bottom: 80px;
+    margin: 16px auto;
+    height: 50vh;
+  }
 }
 
 @media (max-width: 800px) {

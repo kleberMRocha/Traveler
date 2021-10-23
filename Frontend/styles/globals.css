@@ -45,6 +45,12 @@ button {
   }
 }
 
+@media (min-width: 768px) {
+  .footer-traveler {
+    margin-top: 30vh;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
