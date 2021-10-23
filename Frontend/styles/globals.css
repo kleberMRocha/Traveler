@@ -3,6 +3,7 @@
   --primary: #f25d27;
   --secundary: #115d8c;
   --text: #617480;
+  --titulos: #123952;
 }
 
 html,
@@ -18,6 +19,30 @@ button {
   color: inherit;
   text-decoration: none;
   cursor: pointer;
+}
+
+.footer-traveler {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #e8ecee;
+  color: #26323a;
+  font-weight: bold;
+  padding: 8px;
+  height: 200px;
+  margin-top: 200px;
+}
+
+.footer-traveler img {
+  filter: saturate(0%);
+  margin: 8px 0;
+}
+
+@media (max-width: 800px) {
+  .footer-traveler {
+    margin-top: 150vh;
+  }
 }
 
 * {

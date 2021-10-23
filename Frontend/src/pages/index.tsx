@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../../styles/Home.module.css'
+import Places from '../components/Places'
 
 const Home: NextPage = () => {
   return (
@@ -19,11 +20,7 @@ const Home: NextPage = () => {
           <p>Descubra locais incríveis para se visitar em cidades maravilhosas de Santa Catarina.</p>
           <button className={styles.callToAction}>Descobrir todos os lugares</button>
         </section>
-        <section className={styles.places}>
-          <div className={styles.placeHolder}>aaaa</div>
-          <div className={styles.placeHolder}>aaaa</div>
-          <div className={styles.placeHolder}>aaaa</div>
-        </section>
+        <Places />
       </main>
     
     </div>

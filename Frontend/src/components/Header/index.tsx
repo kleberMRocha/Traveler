@@ -13,7 +13,7 @@ export const Header: React.FC = () => {
       <Link href="/signin">
       <a>
       <button type="button" className="btn-signin">
-        SignIn
+        Acesso restrito
       </button>
       </a>
       </Link>

@@ -9,22 +9,6 @@
   max-width: 30%;
 }
 
-.places {
-  width: 60%;
-  background-color: violet;
-}
-
-.placeHolder {
-  background: red;
-  width: 250px;
-  height: 250px;
-}
-
-.placeHolder:nth-child(2) {
-  background: blue;
-  margin-left: auto;
-}
-
 .mainContent strong {
   color: #123952;
   font-family: Barlow;
@@ -60,12 +44,6 @@
   .mainContent section:nth-child(1) {
     max-width: 100%;
     text-align: center;
-  }
-  .places {
-    display: flex;
-    flex-wrap: wrap;
-    flex: 1;
-    margin-top: 16px;
   }
   .mainContent strong {
     font-size: 50px;
