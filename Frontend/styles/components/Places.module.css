@@ -20,7 +20,7 @@
   top: 16px;
 }
 
-.places .location {
+.location {
   border-radius: 8px;
   box-shadow: 2px 2px 2px #c1cace;
   margin: 8px;
@@ -28,9 +28,10 @@
   height: 256px;
   overflow: hidden;
   position: relative;
+  background-size: cover !important;
 }
 
-.places .location span {
+.location span {
   position: absolute;
   width: 100%;
   background-color: #dce2e5;
@@ -41,15 +42,15 @@
   margin: 0;
 }
 
-.places .location h3 {
+.location h3 {
   margin: 4px 0;
 }
 
-.places .location .container {
+.location .container {
   width: 250px;
 }
 
-.places .location .container img {
+.location .container img {
   max-width: 100%;
 }
 

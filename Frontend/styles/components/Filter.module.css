@@ -1,0 +1,27 @@
+.filter {
+  color: #a0acb2;
+  margin-bottom: 8px;
+}
+
+.filter span {
+  position: relative;
+  cursor: pointer;
+}
+.filter span::before {
+  content: ' ';
+  background-color: #a0acb2;
+  position: absolute;
+  height: 1px;
+  width: 100%;
+  padding: 1px;
+  bottom: -8px;
+}
+
+#active-filter {
+  color: var(--secundary);
+  font-weight: bold;
+}
+
+#active-filter::before {
+  background-color: var(--primary);
+}

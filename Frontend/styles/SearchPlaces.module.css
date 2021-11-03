@@ -1,0 +1,20 @@
+.galery {
+  padding: 2rem 8%;
+}
+
+.placesContainer {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.headerSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.headerSection span {
+  margin: 0 4px;
+}

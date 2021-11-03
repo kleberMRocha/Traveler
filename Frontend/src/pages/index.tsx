@@ -1,9 +1,13 @@
 import type { NextPage } from 'next'
+import {useRouter} from 'next/router';
 import Head from 'next/head'
 import styles from '../../styles/Home.module.css'
 import Places from '../components/Places'
 
+
 const Home: NextPage = () => {
+  const router = useRouter();
+  
   return (
     <div className={styles.container}>
       <Head>
@@ -18,7 +22,7 @@ const Home: NextPage = () => {
         <section>
           <strong>Viva uma grande aventura</strong>
           <p>Descubra locais incríveis para se visitar em cidades maravilhosas de Santa Catarina.</p>
-          <button className={styles.callToAction}>Descobrir todos os lugares</button>
+          <button onClick={() => router.push('/places')} className={styles.callToAction}>Descobrir todos os lugares</button>
         </section>
         <Places />
       </main>

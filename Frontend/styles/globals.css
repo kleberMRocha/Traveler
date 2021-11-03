@@ -6,6 +6,12 @@
   --titulos: #123952;
 }
 
+h2 {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--secundary);
+}
+
 html,
 body {
   padding: 0;
