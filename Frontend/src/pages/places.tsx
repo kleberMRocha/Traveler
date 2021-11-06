@@ -12,6 +12,9 @@ const AllPlaces: React.FC = () => {
       <div className={style.headerSection}><h2> Selecione uma cidade </h2> <Filter /></div>
       <div className={style.placesContainer}>
         {places.map((p) => (<Card {...p} key={p.id} />))}
+        {places.length === 0 && <p className={style['info-search']}>
+          Não conseguimos encontrar um lugar com esse nome 😕  
+        </p>}
       </div>
     </section>
   );

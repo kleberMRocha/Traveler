@@ -20,7 +20,15 @@
   top: 16px;
 }
 
+@keyframes entrane {
+  from {
+    opacity: 0;
+    transform: translate(0px, 100px);
+  }
+}
+
 .location {
+  animation: entrane 1s ease-in-out;
   border-radius: 8px;
   box-shadow: 2px 2px 2px #c1cace;
   margin: 8px;
@@ -29,10 +37,12 @@
   overflow: hidden;
   position: relative;
   background-size: cover !important;
+  cursor: pointer;
 }
 
 .location span {
   position: absolute;
+  animation: entrane 1.5s ease-in-out;
   width: 100%;
   background-color: #dce2e5;
   bottom: 0;
