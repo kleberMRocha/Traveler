@@ -7,5 +7,7 @@ export interface ICardProps{
 
 export interface IPlacesData{
     places:ICardProps[];
-    sortPlacesBy: (order:boolean) => void
+    sortPlacesBy: (string: 'default' | 'newer' | 'alphabetical') => void,
+    handleSearch: (string: string) => void,
+    isAlphabetical: boolean
 }

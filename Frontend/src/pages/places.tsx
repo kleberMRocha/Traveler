@@ -7,10 +7,6 @@ import { Filter } from '../components/Filter';
 const AllPlaces: React.FC = () => {
   const { places, sortPlacesBy } = usePlaces();
  
-    useEffect(() => {
-      sortPlacesBy(true);
-    },[])
-
   return (
     <section className={style.galery}>
       <div className={style.headerSection}><h2> Selecione uma cidade </h2> <Filter /></div>
