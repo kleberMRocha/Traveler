@@ -1,4 +1,12 @@
+@keyframes entrane {
+  from {
+    opacity: 0;
+    transform: translate(0px, 100px);
+  }
+}
+
 .places {
+  animation: entrane 1s ease-in-out;
   width: 100%;
   max-width: 600px;
   min-height: 600px;
@@ -20,15 +28,7 @@
   top: 16px;
 }
 
-@keyframes entrane {
-  from {
-    opacity: 0;
-    transform: translate(0px, 100px);
-  }
-}
-
 .location {
-  animation: entrane 1s ease-in-out;
   border-radius: 8px;
   box-shadow: 2px 2px 2px #c1cace;
   margin: 8px;
@@ -42,7 +42,7 @@
 
 .location span {
   position: absolute;
-  animation: entrane 1.5s ease-in-out;
+  animation: entrane 1s ease-in-out;
   width: 100%;
   background-color: #dce2e5;
   bottom: 0;
@@ -50,6 +50,26 @@
   color: var(--titulos);
   padding: 0 16px;
   margin: 0;
+}
+
+.location .topInfos {
+  height: 80px;
+  background-color: #fcfcfc;
+  text-align: center;
+}
+
+.location .topInfos hr {
+  opacity: 0.3;
+}
+
+.location .topInfos small {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.location .topInfos small svg {
+  margin: 0 8px;
 }
 
 .location h3 {
@@ -62,6 +82,21 @@
 
 .location .container img {
   max-width: 100%;
+}
+
+.topAvaliations {
+  background: var(--primary);
+  color: #ffffff;
+  width: 56px;
+  height: 83px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 24px;
+  margin: -16px 0 0 16px;
+  padding: 8px;
+  position: absolute;
+  font-weight: bold;
+  z-index: 1;
 }
 
 @media (max-width: 800px) {

@@ -6,7 +6,7 @@ const Footer:React.FC = () => {
 
     return (
         <footer className="footer-traveler">
-            <img src="images/Logo.svg" alt="logo footer" />
+            <img src="/images/Logo.svg" alt="logo footer" />
             <p>Viva uma grande aventura</p>
             <small>{fullYear} ®</small>
         </footer>

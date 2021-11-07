@@ -1,0 +1,132 @@
+.header-location {
+  height: 400px;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}
+
+.locationInfos {
+  padding: 0 8%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 100px auto auto;
+}
+
+.locationTitle {
+  grid-column-start: 1;
+  grid-column-end: 1;
+  font-size: 50px;
+}
+
+.description {
+  grid-column-start: 1;
+  grid-column-end: 1;
+  color: #123952;
+  line-height: 120%;
+  letter-spacing: 1px;
+}
+.moreInfos {
+  grid-column-start: 1;
+  grid-column-end: 1;
+  font-size: 14px;
+  color: #617480;
+}
+
+.indcations {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 0;
+  align-items: center;
+  width: 160px;
+  height: 268px;
+  background: #ffffff;
+  border: 1px solid #dce2e6;
+  border-radius: 20px;
+  margin: 2px;
+}
+
+.indcations svg {
+  color: var(--primary);
+  font-size: 50px;
+}
+
+.indcations b {
+  font-size: 40px;
+  color: var(--secundary);
+}
+
+.indcations p {
+  font-size: 16px;
+  color: #949596;
+}
+
+.indcations hr {
+  width: 99%;
+  opacity: 0.3;
+}
+
+.containerIndicators {
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  height: 100%;
+}
+
+.avaliations {
+  padding: 0 8%;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.highlighted {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  width: 100%;
+  height: 286px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #dce2e6;
+}
+
+.highlightedInfos {
+  grid-column-start: 1;
+  grid-column-end: 1;
+  padding: 32px;
+}
+
+.highlightedInfos span {
+  background: var(--primary);
+  color: #ffffff;
+  padding: 6px 16px;
+  border-radius: 100px;
+}
+
+.highlightedInfos p {
+  color: #617480;
+  max-width: 80%;
+}
+
+.highlightedImg {
+  grid-column-start: 2;
+  grid-column-end: 2;
+  background-size: cover !important;
+  border-radius: 0 16px 16px 0;
+}
+
+@media (max-width: 800px) {
+  .locationInfos {
+    display: flex;
+    flex-direction: column;
+  }
+}

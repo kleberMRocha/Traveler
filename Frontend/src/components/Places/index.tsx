@@ -24,20 +24,7 @@ const Places: React.FC = () => {
       <div className={style.col}>
         {mockCardHomeCol2.map((p, index) => {
           return (
-            <div 
-            key={`${p.location}-${index}`} 
-            className={style.location}
-            style={{background:`url(${p.picture})`}}
-            
-            >
-              <div className={style.container}>
-                <span>
-                   <h3> {p.location} </h3>
-                   <small>{p.available_location} locais</small>
-                </span>
-              
-              </div>
-            </div>
+            <Card  {...p} key={index}/>
           );
         })}
       </div>

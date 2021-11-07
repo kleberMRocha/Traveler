@@ -4,12 +4,15 @@ import style from '../../../styles/components/Header.module.css';
 import {FiSearch} from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import {usePlaces} from '../../context/usePlaces';
-import handler from '../../pages/api/hello';
+import { FaArrowCircleLeft, FaArrowLeft } from 'react-icons/fa';
+
 
 
 
 export const Header: React.FC = () => {
   const {places, handleSearch} = usePlaces();
+
+  const {back} = useRouter();
 
 
   const router = useRouter();
@@ -25,6 +28,10 @@ export const Header: React.FC = () => {
           <img src="/images/Logo.svg" alt="logo" />
         </a>
       </Link>
+
+      { !isHome && <div><button onClick={() => back()} className={style.goBack} type='button'>
+          <FaArrowLeft />
+        </button></div>}
 
       {
         !isHome &&  (<span className={style.inputSearch}>
