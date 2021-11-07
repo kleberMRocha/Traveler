@@ -16,10 +16,18 @@ export const Header: React.FC = () => {
 
 
   const router = useRouter();
-  const isHome = useMemo(() => router.pathname === '/',[router]);
+
+  const showInputSearch = useMemo(() => {
+    return router.pathname === '/places'
+  },[router]);
+
+  const isHome = useMemo(() => {
+    return router.pathname === '/'
+  },[router]);
+
   const getStyleBorder = useCallback(() => {
-    return !isHome ? `${style.borderGray}` : '';
-  },[isHome]);
+    return showInputSearch ? `${style.borderGray}` : '';
+  },[showInputSearch]);
 
   return (
     <nav className={`${style.container} ${getStyleBorder()}`}>
@@ -34,7 +42,7 @@ export const Header: React.FC = () => {
         </button></div>}
 
       {
-        !isHome &&  (<span className={style.inputSearch}>
+        showInputSearch &&  (<span className={style.inputSearch}>
           <FiSearch /> <input 
                           onChange={(e) => handleSearch(e.target.value)}
                           type="text" 

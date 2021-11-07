@@ -1,4 +1,5 @@
 .container {
+  position: relative;
   display: flex;
   justify-content: space-between;
   justify-items: center;
@@ -21,11 +22,18 @@
 }
 
 .goBack {
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  height: 40px;
+  margin-bottom: auto;
+  margin-top: auto;
   background: none;
-  border: #dce2e5 1px solid;
+  border: #b5babd 1px solid;
   padding: 12px;
   border-radius: 8px;
-  color: #a0acb3;
+  color: #889399;
 }
 
 .container button:hover {

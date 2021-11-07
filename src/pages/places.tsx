@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import style from '../../styles/SearchPlaces.module.css';
 import { usePlaces } from '../context/usePlaces';
 import Card from '../components/shared/Card';

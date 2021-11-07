@@ -6,10 +6,11 @@ import { FaCamera, FaLightbulb } from 'react-icons/fa';
 import Card from '../../components/shared/Card';
 import { ICardProps } from '../../context/types';
 import Link from 'next/link';
+import { Filter } from '../../components/Filter';
 
-interface IHighligh{
-    locationInfos: ICardProps;
-    id: string | number;
+interface IHighligh {
+  locationInfos: ICardProps;
+  id: string | number;
 }
 
 const Indicador: React.FC = () => {
@@ -25,37 +26,41 @@ const Indicador: React.FC = () => {
   );
 };
 
-const Highlighted: React.FC<IHighligh> = ({locationInfos, id}) => {
-
-    return ( 
-      <>
+const Highlighted: React.FC<IHighligh> = ({ locationInfos, id }) => {
+  return (
+    <>
       <Link href={`/location/${id}`}>
         <a>
-        <div className={style.highlighted}>
+          <div className={style.highlighted}>
             <div className={style.highlightedInfos}>
-                <span><FaLightbulb /> Destaque</span>
-                <h2>Praia dos Ingleses</h2>
-                <p>
-                Uma parte do paraíso na terra. Frequentemente com águas
-                claras em tons verdes e azuis. Um dos locais mais preferidos
-                por turistas e viajantes.
-                </p>
+              <span>
+                <FaLightbulb /> Destaque
+              </span>
+              <h2>Praia dos Ingleses</h2>
+              <p>
+                Uma parte do paraíso na terra. Frequentemente com águas claras
+                em tons verdes e azuis. Um dos locais mais preferidos por
+                turistas e viajantes.
+              </p>
             </div>
-            <div className={style.highlightedImg} style={{ background: `url(${locationInfos?.picture})` }}></div>
-        </div>
+            <div
+              className={style.highlightedImg}
+              style={{ background: `url(${locationInfos?.picture})` }}
+            ></div>
+          </div>
         </a>
       </Link>
-    </>)
+    </>
+  );
 };
 
 const Location = () => {
   const { places } = usePlaces();
-  const { asPath,back } = useRouter();
+  const { asPath, back } = useRouter();
   const slug = asPath.split('/')[2];
   const locationInfos = places.find((p) => p.id === slug);
 
-  return (
-    locationInfos ? 
+  return locationInfos ? (
     <>
       <section>
         <div
@@ -65,7 +70,6 @@ const Location = () => {
         <div className={style.locationInfos}>
           <h2 className={style.locationTitle}>{locationInfos?.location}</h2>
           <p className={style.description}>
-            {' '}
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
             eget ultrices sapien. Cras dignissim pretium ante, quis pulvinar
             lorem ornare ac. Nulla facilisi. Vestibulum vel ultricies felis,
@@ -85,21 +89,40 @@ const Location = () => {
         </div>
       </section>
       <section>
-          <div className={style.avaliations}>
-            <h2 className={style.locationTitle}>Top avaliados</h2>
-            <div className={style.top}>
-
-            <Card   {...locationInfos} isTopAvaliation/>
-            <Card   {...locationInfos} isTopAvaliation/>
-            <Card   {...locationInfos} isTopAvaliation/>
-            <Card   {...locationInfos} isTopAvaliation/>
-
-            </div>
-            <Highlighted locationInfos={locationInfos} id={locationInfos.id}/>
+        <div className={style.avaliations}>
+          <h2 className={style.locationTitle}>Top avaliados</h2>
+          <div className={style.top}>
+            <Card {...locationInfos} isTopAvaliation />
+            <Card {...locationInfos} isTopAvaliation />
+            <Card {...locationInfos} isTopAvaliation />
+            <Card {...locationInfos} isTopAvaliation />
           </div>
+          <Highlighted locationInfos={locationInfos} id={locationInfos.id} />
+        </div>
       </section>
-    </> 
-    :<><p>...Carregando</p></>
+      <section className={style.allLocationContaine}>
+        <div className={style.allLocationsHeader}> 
+           <h2>Conheça todos</h2> 
+           <Filter />
+        </div>
+        <div className={style.allLocations}>
+          <Card {...locationInfos} isTopAvaliation />
+          <Card {...locationInfos} isTopAvaliation />
+          <Card {...locationInfos} isTopAvaliation />
+          <Card {...locationInfos} isTopAvaliation />
+
+          <Card {...locationInfos} isTopAvaliation />
+          <Card {...locationInfos} isTopAvaliation />
+          <Card {...locationInfos} isTopAvaliation />
+          <Card {...locationInfos} isTopAvaliation />
+          
+        </div>
+      </section>
+    </>
+  ) : (
+    <>
+      <p>...Carregando</p>
+    </>
   );
 };
 

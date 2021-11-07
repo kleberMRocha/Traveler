@@ -85,6 +85,31 @@
 .top {
   display: flex;
   justify-content: space-between;
+  gap: 24px 0;
+  flex-wrap: wrap;
+}
+
+.allLocationContaine {
+  padding: 0 8%;
+}
+
+.allLocationsHeader {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.allLocationsHeader h2 {
+  font-size: 50px;
+  font-style: normal;
+  font-weight: 600;
+  color: var(--secundary);
+}
+.allLocations {
+  display: flex;
+  gap: 24px 0;
+  justify-content: space-between;
   flex-wrap: wrap;
 }
 
@@ -92,7 +117,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
-  width: 100%;
+  width: 99%;
+  margin-left: 8px;
   height: 286px;
   border-radius: 16px;
   background: #ffffff;
@@ -128,5 +154,22 @@
   .locationInfos {
     display: flex;
     flex-direction: column;
+  }
+  .highlighted {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 0;
+  }
+  .highlightedImg {
+    display: block;
+    background-size: cover !important;
+    border-radius: 0 0 16px 16px;
+    height: 100%;
+    width: 100%;
+  }
+  .top {
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
   }
 }
