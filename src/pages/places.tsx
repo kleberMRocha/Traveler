@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { usePlaces } from '../context/usePlaces';
 import style from '../../styles/SearchPlaces.module.css';
+import { usePlaces } from '../context/usePlaces';
 import Card from '../components/shared/Card';
 import { Filter } from '../components/Filter';
 

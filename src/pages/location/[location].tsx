@@ -5,9 +5,11 @@ import style from '../../../styles/Locations.module.css';
 import { FaCamera, FaLightbulb } from 'react-icons/fa';
 import Card from '../../components/shared/Card';
 import { ICardProps } from '../../context/types';
+import Link from 'next/link';
 
 interface IHighligh{
     locationInfos: ICardProps;
+    id: string | number;
 }
 
 const Indicador: React.FC = () => {
@@ -23,20 +25,27 @@ const Indicador: React.FC = () => {
   );
 };
 
-const Highlighted: React.FC<IHighligh> = ({locationInfos}) => {
+const Highlighted: React.FC<IHighligh> = ({locationInfos, id}) => {
 
-    return ( <div className={style.highlighted}>
-        <div className={style.highlightedInfos}>
-            <span><FaLightbulb /> Destaque</span>
-            <h2>Praia dos Ingleses</h2>
-            <p>
-            Uma parte do paraíso na terra. Frequentemente com águas
-            claras em tons verdes e azuis. Um dos locais mais preferidos
-            por turistas e viajantes.
-            </p>
+    return ( 
+      <>
+      <Link href={`/location/${id}`}>
+        <a>
+        <div className={style.highlighted}>
+            <div className={style.highlightedInfos}>
+                <span><FaLightbulb /> Destaque</span>
+                <h2>Praia dos Ingleses</h2>
+                <p>
+                Uma parte do paraíso na terra. Frequentemente com águas
+                claras em tons verdes e azuis. Um dos locais mais preferidos
+                por turistas e viajantes.
+                </p>
+            </div>
+            <div className={style.highlightedImg} style={{ background: `url(${locationInfos?.picture})` }}></div>
         </div>
-        <div className={style.highlightedImg} style={{ background: `url(${locationInfos?.picture})` }}></div>
-    </div>)
+        </a>
+      </Link>
+    </>)
 };
 
 const Location = () => {
@@ -86,7 +95,7 @@ const Location = () => {
             <Card   {...locationInfos} isTopAvaliation/>
 
             </div>
-            <Highlighted locationInfos={locationInfos} />
+            <Highlighted locationInfos={locationInfos} id={locationInfos.id}/>
           </div>
       </section>
     </> 
