@@ -17,14 +17,14 @@ const Places: React.FC = () => {
       <div className={style.col}>
         {mockCardHomeCol1.map((p, index) => {
           return (
-          <Card  {...p} key={index}/>
+          <Card isTopAvaliation={false} {...p} key={index}/>
           );
         })}
       </div>
       <div className={style.col}>
         {mockCardHomeCol2.map((p, index) => {
           return (
-            <Card  {...p} key={index}/>
+            <Card isTopAvaliation={false} {...p} key={index}/>
           );
         })}
       </div>

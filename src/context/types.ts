@@ -3,7 +3,7 @@ export interface ICardProps{
     picture: string;
     available_location: string | number;
     id: number | string;
-    isTopAvaliation: boolean;
+    isTopAvaliation?: boolean;
 };
 
 export interface IPlacesData{
