@@ -52,7 +52,7 @@
   .mainContent > section:nth-child(2) {
     margin-bottom: 80px;
     margin: 16px auto;
-    height: 50vh;
+    height: auto;
   }
 }
 

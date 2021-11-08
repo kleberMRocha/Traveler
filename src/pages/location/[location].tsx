@@ -7,6 +7,7 @@ import Card from '../../components/shared/Card';
 import { ICardProps } from '../../context/types';
 import Link from 'next/link';
 import { Filter } from '../../components/Filter';
+import Head  from 'next/head';
 
 interface IHighligh {
   locationInfos: ICardProps;
@@ -29,6 +30,9 @@ const Indicador: React.FC = () => {
 const Highlighted: React.FC<IHighligh> = ({ locationInfos, id }) => {
   return (
     <>
+      <Head>
+        <title> {locationInfos.location} | Traveler</title>
+      </Head>
       <Link href={`/location/${id}`}>
         <a>
           <div className={style.highlighted}>
@@ -88,6 +92,7 @@ const Location = () => {
           </div>
         </div>
       </section>
+
       <section>
         <div className={style.avaliations}>
           <h2 className={style.locationTitle}>Top avaliados</h2>
@@ -100,6 +105,7 @@ const Location = () => {
           <Highlighted locationInfos={locationInfos} id={locationInfos.id} />
         </div>
       </section>
+
       <section className={style.allLocationContaine}>
         <div className={style.allLocationsHeader}> 
            <h2>Conheça todos</h2> 
@@ -118,6 +124,7 @@ const Location = () => {
           
         </div>
       </section>
+   
     </>
   ) : (
     <>
