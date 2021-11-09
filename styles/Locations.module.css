@@ -53,7 +53,7 @@
 
 .indcations b {
   font-size: 40px;
-  color: var(--secundary);
+  color: var(--secondary);
 }
 
 .indcations p {
@@ -100,12 +100,6 @@
   align-items: center;
 }
 
-.allLocationsHeader h2 {
-  font-size: 50px;
-  font-style: normal;
-  font-weight: 600;
-  color: var(--secundary);
-}
 .allLocations {
   display: flex;
   gap: 24px 0;
@@ -159,6 +153,7 @@
     display: flex;
     flex-wrap: wrap;
     margin-left: 0;
+    border-radius: 16px 16px 0 0;
   }
   .highlightedImg {
     display: block;

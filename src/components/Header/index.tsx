@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import style from '../../../styles/components/Header.module.css';
 import {FiSearch} from 'react-icons/fi';
@@ -13,9 +13,12 @@ export const Header: React.FC = () => {
   const {places, handleSearch} = usePlaces();
 
   const {back} = useRouter();
-
-
   const router = useRouter();
+
+ 
+  const getStyleBorder = () => {
+      return !isHome ? `${style.borderGray}` : '';
+  };
 
   const showInputSearch = useMemo(() => {
     return router.pathname === '/places'
@@ -24,10 +27,6 @@ export const Header: React.FC = () => {
   const isHome = useMemo(() => {
     return router.pathname === '/'
   },[router]);
-
-  const getStyleBorder = useCallback(() => {
-    return showInputSearch ? `${style.borderGray}` : '';
-  },[showInputSearch]);
 
   return (
     <nav className={`${style.container} ${getStyleBorder()}`}>

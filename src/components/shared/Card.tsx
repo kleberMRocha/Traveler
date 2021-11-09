@@ -14,7 +14,7 @@ const Card: React.FC<ICardProps> = ({
 }) => {
   return (
     <>
-      <Link href={`/location/${id}`}>
+      <Link href={`/${isTopAvaliation ? 'turism' : 'location'}/${id}`}>
         <a>
         {
           isTopAvaliation && 

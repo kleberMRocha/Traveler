@@ -9,7 +9,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <ContextProviders>
         <Header />
-        <Component {...pageProps} />
+        <main>
+          <Component {...pageProps} />
+        </main>
         <Footer />
       </ContextProviders>
     </>

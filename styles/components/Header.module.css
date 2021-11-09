@@ -4,6 +4,7 @@
   justify-content: space-between;
   justify-items: center;
   padding: 2rem 8%;
+  margin-bottom: 2px;
 }
 .borderGray {
   border: 2px solid #dce2e6;
@@ -15,7 +16,7 @@
   border: none;
   background: #dde9f0;
   border-radius: 10px;
-  color: var(--secundary);
+  color: var(--secondary);
   font-weight: bold;
   transition: 0.5s;
   margin: 0 8px;

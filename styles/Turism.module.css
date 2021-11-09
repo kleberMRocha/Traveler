@@ -1,0 +1,95 @@
+.container {
+  padding: 0 8%;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.container h2 + p {
+  color: var(--text);
+}
+
+.container h6 + p {
+  color: var(--titulos);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.whatsap {
+  display: flex;
+  gap: 2px;
+  background: none;
+  border: none;
+  background: #51b853;
+  color: #ffffff;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 8px 0;
+  align-items: center;
+}
+.whatsapContainer {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8%;
+  align-items: center;
+  margin: 16px 0;
+}
+.whatsap:hover {
+  filter: brightness(1.1);
+}
+.whatsap svg {
+  font-size: 16px;
+}
+
+.turismImage {
+  position: relative;
+  right: 0;
+  top: 0;
+  z-index: 1;
+}
+
+.turismImage img {
+  width: auto;
+}
+
+.tag {
+  position: absolute;
+  background-color: #ffffff;
+  color: var(--primary);
+  padding: 16px;
+  right: 4px;
+  border-radius: 8px;
+  margin: 8px;
+}
+
+.scheduleContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.schedule {
+  background: #ffffff;
+  border: 1px solid #dce2e6;
+  box-sizing: border-box;
+  border-radius: 8px;
+  width: 104px;
+  height: 84px;
+  text-align: center;
+  color: var(--secondary);
+}
+
+@media (max-width: 800px) {
+  .turismImage img {
+    width: 100%;
+  }
+
+  .container {
+    flex-wrap: wrap;
+  }
+
+  .container h2 + p {
+    max-width: 100%;
+  }
+}
