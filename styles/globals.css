@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@100;300;400;600;700&display=swap');
+
 :root {
   --background: #f5f8fa;
   --primary: #f25d27;
@@ -73,6 +75,11 @@ h5::before {
   width: 90%;
   bottom: 0;
   margin-bottom: -20px;
+}
+
+.smallText {
+  font-size: 12px;
+  color: #585f64;
 }
 
 h6 {

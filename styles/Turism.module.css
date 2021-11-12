@@ -80,6 +80,86 @@
   color: var(--secondary);
 }
 
+.container iframe + p {
+  color: var(--text);
+}
+
+.avaliation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.avaliationContainer {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.avaliationRate {
+  color: var(--primary);
+  font-weight: bold;
+  display: flex;
+  gap: 8px;
+}
+
+.avaliationContainer button {
+  background: none;
+  border: none;
+  color: var(--text);
+}
+
+.avaliationContainer::before {
+  position: absolute;
+  content: '';
+  background: #26323a;
+  opacity: 0.2;
+  padding: 0.5px;
+  width: 90%;
+  bottom: 0;
+  margin-bottom: -20px;
+}
+
+.titleAvaliation {
+  position: relative;
+  font-size: 24px;
+  color: var(--secondary);
+  filter: brightness(1.2);
+}
+
+.AvaliationCard {
+  margin-top: 32px;
+  display: flex;
+  gap: 8px;
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 1px 1px 2px #00000023;
+}
+.AvaliationCard img {
+  max-width: 80px;
+  border-radius: 80px;
+}
+
+.AvaliationCard hr {
+  opacity: 0.5;
+  max-width: 90%;
+}
+
+.cardAvaliationHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8% 0 0;
+  color: var(--primary);
+  font-size: 12px;
+}
+
+.customerName {
+  font-size: 18px;
+}
+
 @media (max-width: 800px) {
   .turismImage img {
     width: 100%;
