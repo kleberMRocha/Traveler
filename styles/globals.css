@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@100;300;400;600;700&display=swap');
+@import './components/modalGlobal.css';
 
 :root {
   --background: #f5f8fa;
@@ -6,6 +7,22 @@
   --secondary: #115d8c;
   --text: #617480;
   --titulos: #123952;
+}
+
+*::-webkit-scrollbar {
+  width: 11px;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--background);
+}
+*::-webkit-scrollbar-track {
+  background: var(--background);
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 6px;
+  border: 3px solid var(--background);
 }
 
 h2 {
@@ -91,4 +108,10 @@ h6 {
 
 * {
   box-sizing: border-box;
+}
+
+@keyframes modalEntrance {
+  from {
+    opacity: 0.1;
+  }
 }

@@ -4,12 +4,15 @@ import { Header } from '../components/Header';
 import Footer from '../components/Footer/Footer';
 import ContextProviders from '../context/index';
 import Loader from '../components/Loader';
+import Modal from '../components/shared/modal';
+
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <ContextProviders>
-        <Loader time={1000}/>
+        <Modal  />
+        {/* <Loader time={1000}/> */}
         <Header />
         <main>
           <Component {...pageProps} />

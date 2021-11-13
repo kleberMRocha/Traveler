@@ -12,3 +12,8 @@ export interface IPlacesData{
     handleSearch: (string: string) => void,
     isAlphabetical: boolean
 }
+
+export interface IModal{
+    isOpen:boolean;
+    handleOpenModal: (value:boolean) => void;
+}

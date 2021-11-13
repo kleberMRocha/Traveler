@@ -9,7 +9,7 @@ interface IAtendimento {
   horario: string;
 }
 
-const AvaliationCard: React.FC = () => {
+export const AvaliationCard: React.FC = () => {
   return (
     <div className={style.AvaliationCard}>
       <div>

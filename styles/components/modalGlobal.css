@@ -1,0 +1,91 @@
+.modalContainer {
+  animation: modalEntrance 0.3s ease-in forwards;
+  z-index: 2;
+  background-color: #123a52b0;
+  position: fixed;
+  display: grid;
+  place-content: center;
+  height: 100vh;
+  width: 100%;
+  backdrop-filter: blur(4px);
+}
+.modal {
+  animation: modalEntrance 0.5s ease-in forwards;
+  position: absolute;
+  z-index: 3;
+  background-color: #ffffff;
+  width: 750px;
+  height: 500px;
+  border-radius: 8px;
+  margin: auto;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  right: 0;
+}
+
+.modalHeader {
+  height: 70px;
+  border-bottom: solid 1px #dbdbdb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.modalHeader span:nth-child(1) {
+  color: var(--primary);
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.modalHeader span:nth-child(2) {
+  color: var(--titulos);
+  font-size: 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.modalHeader button {
+  background: transparent;
+  border: 1px solid var(--text);
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 16px;
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalHeader button:hover {
+  filter: opacity(0.9);
+}
+
+.modalBody {
+  height: 400px;
+  overflow-y: scroll;
+  padding: 0 15%;
+}
+
+@media (max-width: 800px) {
+  .modal {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    border-radius: 0;
+  }
+  #btn-open-add-avaliation {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .modalBody {
+    height: 80%;
+    overflow-y: scroll;
+    padding: 0 2%;
+  }
+}

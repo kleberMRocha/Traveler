@@ -1,11 +1,14 @@
 import React from 'react';
 import {PlacesProvider} from './usePlaces';
+import {ModalProvider} from './useModal';
 
 const Wrapper:React.FC = ({children}) => {
 
     return (
     <PlacesProvider>
-        {children}
+        <ModalProvider>
+             {children}
+        </ModalProvider>
     </PlacesProvider>
        
     );
