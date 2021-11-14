@@ -2,6 +2,7 @@ import { getURL } from 'next/dist/shared/lib/utils';
 import Head from 'next/head';
 import React from 'react';
 import { FaCoffee, FaStar, FaWhatsapp } from 'react-icons/fa';
+import { useModal } from '../../context/useModal';
 import style from '../../../styles/Turism.module.css';
 
 interface IAtendimento {
@@ -18,13 +19,13 @@ export const AvaliationCard: React.FC = () => {
       <div>
         <span className={style.cardAvaliationHeader}>
           <h6 className={style.customerName}>Patricksom Vieras </h6>
-           <div>
-           <FaStar />
+          <div>
             <FaStar />
             <FaStar />
             <FaStar />
             <FaStar />
-           </div>
+            <FaStar />
+          </div>
         </span>
         <small className="smallText">
           Grande variedade de bolos, cucas, tortas e algumas opções de salgados.
@@ -52,9 +53,12 @@ const DiasAtendimento: React.FC<IAtendimento> = ({ dia, horario }) => {
 };
 
 const Turism = () => {
+  
   const getUrlMap = () => {
     return 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d36553983.44087083!2d-96!3d56!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b0d03d337cc6ad9%3A0x9968b72aa2438fa5!2zQ2FuYWTDoQ!5e0!3m2!1spt-BR!2sbr!4v1636678703863!5m2!1spt-BR!2sbr';
   };
+  const { handleOpenModal } = useModal();
+
   return (
     <div className={style.container}>
       <Head>
@@ -96,7 +100,9 @@ const Turism = () => {
               allowFullScreen={true}
               loading="lazy"
             ></iframe>
-            <small className="smallText">Rua 7 de Setembro, 319 - Jardim América 89160-170</small>
+            <small className="smallText">
+              Rua 7 de Setembro, 319 - Jardim América 89160-170
+            </small>
           </div>
           <div>
             <div className={style.avaliationContainer}>
@@ -107,8 +113,12 @@ const Turism = () => {
                 <FaStar /> 5.0
               </span>
               <span>
-                <button>Adicionar</button>
-                <button>Ver todas</button>
+                <button type="button" onClick={() => handleOpenModal(true)}>
+                  Adicionar
+                </button>
+                <button type="button" onClick={() => handleOpenModal(true)}>
+                  Ver todas
+                </button>
               </span>
             </div>
             <div>
