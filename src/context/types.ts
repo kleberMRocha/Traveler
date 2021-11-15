@@ -16,4 +16,8 @@ export interface IPlacesData{
 export interface IModal{
     isOpen:boolean;
     handleOpenModal: (value:boolean) => void;
+    handleNextStep: (value:number) => void;
+    steps: number;
+    handleSetRate: (value:number) => void;
+    rate: number;
 }
