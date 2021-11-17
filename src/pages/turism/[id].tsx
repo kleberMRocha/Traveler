@@ -57,7 +57,7 @@ const Turism = () => {
   const getUrlMap = () => {
     return 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d36553983.44087083!2d-96!3d56!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b0d03d337cc6ad9%3A0x9968b72aa2438fa5!2zQ2FuYWTDoQ!5e0!3m2!1spt-BR!2sbr!4v1636678703863!5m2!1spt-BR!2sbr';
   };
-  const { handleOpenModal } = useModal();
+  const { handleOpenModal, handleNextStep } = useModal();
 
   return (
     <div className={style.container}>
@@ -113,7 +113,10 @@ const Turism = () => {
                 <FaStar /> 5.0
               </span>
               <span>
-                <button type="button" onClick={() => handleOpenModal(true)}>
+                <button type="button" onClick={() => {
+                  handleNextStep(1);
+                  handleOpenModal(true);
+                }}>
                   Adicionar
                 </button>
                 <button type="button" onClick={() => handleOpenModal(true)}>

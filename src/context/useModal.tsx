@@ -13,10 +13,11 @@ export const ModalProvider: React.FC = ({ children }) => {
     const handleOpenModal = (value:boolean) => {
       if(!value && steps !== 2){
         setSteps(0);
+        setRate(0);
       }
 
       window.scrollTo(0, 0);
-        setIsOpen(value);
+      setIsOpen(value);
 
         
     };
