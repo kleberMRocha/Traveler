@@ -65,6 +65,10 @@
   font-weight: bold;
 }
 
+.container .errored {
+  border: 2px solid tomato;
+}
+
 .container button {
   background: #4bb543;
   border: none;
@@ -75,6 +79,7 @@
   border-radius: 4px;
   font-weight: bold;
 }
+
 .container .changeForm {
   display: flex;
   align-items: center;
@@ -94,7 +99,7 @@
   height: 100vh;
   background: url('/images/traveler-bg-min.jpg');
   background-size: cover;
-  border-radius: 0 8px 8px 0;
+  border-radius: 0px;
 }
 
 @media (max-width: 800px) {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import style from './../../styles/Signin.module.css';
 import { FaArrowLeft } from 'react-icons/fa';
@@ -8,13 +8,60 @@ interface IForm {
   handleChangeForm: (type: string) => void;
 }
 
+interface IFormField {
+  value: string;
+  isErrored: boolean;
+  name: string;
+}
+
 const FormSignin: React.FC<IForm> = ({ type, handleChangeForm }) => {
+  const [form, setform] = useState<IFormField[]>([
+    {
+      value: '',
+      isErrored: false,
+      name: 'email',
+    },
+    {
+      value: '',
+      isErrored: false,
+      name: 'password',
+    },
+  ]);
+
+  const formPayLoad = useMemo(() => {
+    const payload = { email: '', password:'' };
+    form.forEach((p) => {
+      return payload[p.name as 'email' | 'password'] = p.value
+    });
+
+    return payload;
+
+  },[form]);
+
+  const handleChange = (value: string, name: string) => {
+    const newValues = form.map((v) => {
+      v.name === name 
+        ? v.value = value 
+        : v;
+
+      return v;
+    });
+    setform(newValues);
+  };
+
   return type === 'forgot' ? (
     <div className={style.container}>
       <h2>Esqueci Minha Senha</h2>
       <form>
         <label htmlFor="email">E-mail </label>
-        <input type="text" name="user" id="email" placeholder="E-mail" />
+        <input
+          type="text"
+          name={form[0].name}
+          value={form[0].value}
+          id="email"
+          placeholder="E-mail"
+          onChange={(e) => handleChange(e.target.value, 'email')}
+        />
 
         <button>Enviar E-mail de Recuperação</button>
       </form>
@@ -35,16 +82,25 @@ const FormSignin: React.FC<IForm> = ({ type, handleChangeForm }) => {
         </div>
 
         <label htmlFor="email">E-mail </label>
-        <input type="text" name="user" id="email" placeholder="E-mail" />
+        <input
+          type="text"
+          name={form[0].name}
+          id="email"
+          placeholder="E-mail"
+          value={form[0].value}
+          onChange={(e) => handleChange(e.target.value, 'email')}
+        />
 
         <label htmlFor="password">Senha </label>
         <input
           type="password"
-          name="password"
           id="password"
+          value={form[1].value}
+          name={form[1].name}
           placeholder="Senha"
+          onChange={(e) => handleChange(e.target.value, 'password')}
         />
-        <button>Acessar</button>
+        <button type="button" onClick={() => console.log(formPayLoad)}>Acessar</button>
       </form>
 
       <button
