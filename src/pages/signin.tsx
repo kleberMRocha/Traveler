@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import Link from 'next/link';
+import { GetServerSideProps } from 'next'
+import nookies, {parseCookies} from 'nookies';
 import style from './../../styles/Signin.module.css';
 import { FaArrowLeft } from 'react-icons/fa';
 
@@ -47,6 +48,21 @@ const FormSignin: React.FC<IForm> = ({ type, handleChangeForm }) => {
       return v;
     });
     setform(newValues);
+  };
+
+  const handleSignin  = async () => {
+    fetch('http://localhost:3000/api/auth', {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body:JSON.stringify(formPayLoad),
+      method:'POST'
+    }).then(res => res.json())
+    .then(res => {
+      localStorage.setItem('@traveller-token', JSON.stringify(res));
+    })
+    .catch(err => console.log(err))
   };
 
   return type === 'forgot' ? (
@@ -100,7 +116,9 @@ const FormSignin: React.FC<IForm> = ({ type, handleChangeForm }) => {
           placeholder="Senha"
           onChange={(e) => handleChange(e.target.value, 'password')}
         />
-        <button type="button" onClick={() => console.log(formPayLoad)}>Acessar</button>
+        <button type="button" onClick={ async () => await handleSignin()}
+        
+        >Acessar</button>
       </form>
 
       <button
@@ -124,5 +142,12 @@ const Login: React.FC = () => {
     </section>
   );
 };
+
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { req, res } = ctx
+
+  return { props: {  } }
+}
 
 export default Login;

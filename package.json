@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/cookies": "^0.7.7",
+    "axios": "^0.24.0",
     "next": "11.1.2",
+    "nookies": "^2.5.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "^4.3.1"
