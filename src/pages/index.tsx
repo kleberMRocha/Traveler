@@ -1,8 +1,9 @@
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import {useRouter} from 'next/router';
 import Head from 'next/head'
 import styles from '../../styles/Home.module.css';
 import Places from '../components/Places';
+import { parseCookies } from 'nookies';
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -29,5 +30,19 @@ const Home: NextPage = () => {
     </div>
   )
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+
+  const {traveller_token} = parseCookies(ctx);
+  if(!traveller_token) return { props: {} };
+
+  const {token, user} = JSON.parse(traveller_token);
+  
+  return { redirect: {
+    destination: '/dashboard',
+    permanent: false,
+  } ,props: { token, user } }
+}
+
 
 export default Home

@@ -1,31 +1,37 @@
 import React, { useMemo } from 'react';
+import { NavDash } from './DashboardNav';
 import Link from 'next/link';
 import style from '../../../styles/components/Header.module.css';
-import {FiSearch} from 'react-icons/fi';
+import { FiSearch, FiPower } from 'react-icons/fi';
 import { useRouter } from 'next/router';
-import {usePlaces} from '../../context/usePlaces';
+
+import { usePlaces } from '../../context/usePlaces';
+import { useAuth } from '../../context/useAuth';
 import { FaArrowLeft } from 'react-icons/fa';
 
-
 export const Header: React.FC = () => {
+  const { places, handleSearch } = usePlaces();
+  const { user, isAuth, signout } = useAuth();
 
-  const {places, handleSearch} = usePlaces();
-
-  const {back} = useRouter();
+  const { back } = useRouter();
   const router = useRouter();
 
- 
   const getStyleBorder = () => {
-      return !isHome ? `${style.borderGray}` : '';
+    return !isHome ? `${style.borderGray}` : '';
+  };
+
+  const handleLogout = async () => {
+    signout();
+    router.push('/');
   };
 
   const showInputSearch = useMemo(() => {
-    return router.pathname === '/places'
-  },[router]);
+    return router.pathname === '/places';
+  }, [router]);
 
   const isHome = useMemo(() => {
-    return router.pathname === '/'
-  },[router]);
+    return router.pathname === '/';
+  }, [router]);
 
   return (
     <nav className={`${style.container} ${getStyleBorder()}`}>
@@ -35,27 +41,44 @@ export const Header: React.FC = () => {
         </a>
       </Link>
 
-      { !isHome && <div><button onClick={() => back()} className={style.goBack} type='button'>
-          <FaArrowLeft />
-        </button></div>}
+      {!isHome && (
+        <div>
+          <button onClick={() => back()} className={style.goBack} type="button">
+            <FaArrowLeft />
+          </button>
+        </div>
+      )}
 
-      {
-        showInputSearch &&  (<span className={style.inputSearch}>
-          <FiSearch /> <input 
-                          onChange={(e) => handleSearch(e.target.value)}
-                          type="text" 
-                          placeholder="Qual cidade você procura?" 
-                       />
-        </span>)
-      }
-    
-      <Link href="/signin">
-      <a>
-      <button type="button" className="btn-signin">
-        Acesso restrito
-      </button>
-      </a>
-      </Link>
+      {showInputSearch && (
+        <span className={style.inputSearch}>
+          <FiSearch />{' '}
+          <input
+            onChange={(e) => handleSearch(e.target.value)}
+            type="text"
+            placeholder="Qual cidade você procura?"
+          />
+        </span>
+      )}
+
+      { isAuth && <NavDash /> }
+
+      {!isAuth ? (
+        <Link href="/signin">
+          <a>
+            <button type="button" className="btn-signin">
+              Acesso restrito
+            </button>
+          </a>
+        </Link>
+      ) : (
+        <button 
+          onClick={() => handleLogout()}
+          type="button" 
+          id={style['btn-logout']}
+        >
+          Logout <FiPower />
+        </button>
+      )}
     </nav>
   );
 };
