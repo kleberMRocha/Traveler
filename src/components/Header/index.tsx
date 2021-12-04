@@ -1,15 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import Link from 'next/link';
 import style from '../../../styles/components/Header.module.css';
 import {FiSearch} from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import {usePlaces} from '../../context/usePlaces';
-import { FaArrowCircleLeft, FaArrowLeft } from 'react-icons/fa';
-
-
+import { FaArrowLeft } from 'react-icons/fa';
 
 
 export const Header: React.FC = () => {
+
   const {places, handleSearch} = usePlaces();
 
   const {back} = useRouter();

@@ -21,3 +21,16 @@ export interface IModal{
     handleSetRate: (value:number) => void;
     rate: number;
 }
+
+export interface IUser{
+    id: string;
+    email:string;
+    firstName: string;
+}
+export interface IAuth{
+    signout: () => void,
+    setAuth: (auth: {token:string, user: IUser }) => void,
+    isAuth: boolean;
+    token: string;
+    user: IUser
+}

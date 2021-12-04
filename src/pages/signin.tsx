@@ -1,8 +1,11 @@
-import React, { useState, useMemo } from 'react';
-import { GetServerSideProps } from 'next'
-import nookies, {parseCookies} from 'nookies';
+import React, { useState, useMemo, useEffect } from 'react';
+import { GetServerSideProps } from 'next';
+import {parseCookies} from 'nookies';
 import style from './../../styles/Signin.module.css';
 import { FaArrowLeft } from 'react-icons/fa';
+import {useAuth} from '../context/useAuth';
+import Router from 'next/router'
+
 
 interface IForm {
   type: string;
@@ -16,6 +19,10 @@ interface IFormField {
 }
 
 const FormSignin: React.FC<IForm> = ({ type, handleChangeForm }) => {
+
+  const {setAuth, user, token, isAuth} = useAuth();
+
+
   const [form, setform] = useState<IFormField[]>([
     {
       value: '',
@@ -60,7 +67,17 @@ const FormSignin: React.FC<IForm> = ({ type, handleChangeForm }) => {
       method:'POST'
     }).then(res => res.json())
     .then(res => {
-      localStorage.setItem('@traveller-token', JSON.stringify(res));
+
+      if(res.token && res.user){
+        setAuth(res);
+        localStorage.setItem('@traveller-token', JSON.stringify(res));
+        Router.push('/dashboard');
+
+      }
+
+      return;
+
+  
     })
     .catch(err => console.log(err))
   };
@@ -132,7 +149,7 @@ const FormSignin: React.FC<IForm> = ({ type, handleChangeForm }) => {
   );
 };
 
-const Login: React.FC = () => {
+const Login: React.FC = (props) => {
   const [formType, setFormType] = useState('signin');
 
   return (
@@ -145,9 +162,16 @@ const Login: React.FC = () => {
 
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { req, res } = ctx
 
-  return { props: {  } }
+  const {traveller_token} = parseCookies(ctx);
+  if(!traveller_token) return { props: {} };
+
+  const {token, user} = JSON.parse(traveller_token);
+  
+  return { redirect: {
+    destination: '/dashboard',
+    permanent: false,
+  } ,props: { token, user } }
 }
 
 export default Login;

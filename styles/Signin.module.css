@@ -99,6 +99,8 @@
   height: 100vh;
   background: url('/images/traveler-bg-min.jpg');
   background-size: cover;
+  filter: opacity(0.8);
+  background-position: -200px;
   border-radius: 0px;
 }
 

@@ -1,28 +1,28 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import Axios from 'axios';
-import {setCookie, parseCookies} from 'nookies';
-
-const api = Axios.create({
-  baseURL: 'http://localhost:4000/'
-});
-
-
-
+import nookies from 'nookies';
+import api from '../../services/axios';
 
 export default async function handler(req: NextApiRequest,res: NextApiResponse) {
 
 try {
   const response = await api.post('auth', req.body);
-  const { token } = response.data;
+  if(response.statusText === 'OK'){
 
-  setCookie(undefined,'traveller-token',`Bearer ${token}`, {
+  const { token, user } = response.data;
+
+  nookies.set({res},'traveller_token',JSON.stringify({token: `Bearer ${token}`, user}), {
     maxAge: 60 * 60 * 24, //24h
+    path: "/",
   });
 
 
-  return res.status(200).json({token: `Bearer ${token}`});
- 
+  return res.status(200).json({token: `Bearer ${token}`, user});
+
+  }
+  
+  return res.status(403).json({message: 'Senha ou login incorretos'});
+
 } catch (error: any) {
   return res.status(403).json({ message: error.message });
 }
