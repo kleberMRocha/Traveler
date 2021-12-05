@@ -73,18 +73,27 @@ const FormSignin: React.FC<IForm> = ({ type, handleChangeForm }) => {
       const validation = Array(error);
       const err = (JSON.parse(JSON.stringify(validation)));
       const { inner } = err[0];
-      
+
+
+      const erroredFields:string[] = [];
       inner.forEach((e: {path:string,message:string }) => {
-
-        const newForm = form.map(f => {
-          f.isErrored = f.name === e.path;
-          return f;
-        });
-
-        setform(newForm);
-
         toast.error(`Campo ${e.path}: ${e.message}`);
+        erroredFields.push(e.path);
       });
+      
+    
+      const newForm = form.map(f => {
+
+        if(erroredFields.includes(f.name )){
+          f.isErrored = true;
+          return f;
+        }
+
+        f.isErrored = false;
+        return f;
+      });
+      
+      setform(newForm);
       return;
     }
 
