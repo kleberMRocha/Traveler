@@ -10,8 +10,8 @@ import { useAuth } from '../../context/useAuth';
 import { FaArrowLeft } from 'react-icons/fa';
 
 export const Header: React.FC = () => {
-  const { places, handleSearch } = usePlaces();
-  const { user, isAuth, signout } = useAuth();
+  const { handleSearch } = usePlaces();
+  const { isAuth, signout } = useAuth();
 
   const { back } = useRouter();
   const router = useRouter();
@@ -21,6 +21,7 @@ export const Header: React.FC = () => {
   };
 
   const handleLogout = async () => {
+    localStorage.clear();
     signout();
     router.push('/');
   };

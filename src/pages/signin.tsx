@@ -1,11 +1,13 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
+import {signInFormShape} from '../services/yup/index';
 import { GetServerSideProps } from 'next';
-import {parseCookies} from 'nookies';
+import { parseCookies } from 'nookies';
 import style from './../../styles/Signin.module.css';
 import { FaArrowLeft } from 'react-icons/fa';
-import {useAuth} from '../context/useAuth';
-import Router from 'next/router'
-
+import { useAuth } from '../context/useAuth';
+import Router from 'next/router';
+import { ToastContainer, toast } from 'react-toastify';
+import { string } from 'yup/lib/locale';
 
 interface IForm {
   type: string;
@@ -19,9 +21,7 @@ interface IFormField {
 }
 
 const FormSignin: React.FC<IForm> = ({ type, handleChangeForm }) => {
-
-  const {setAuth, user, token, isAuth} = useAuth();
-
+  const { setAuth, user, token, isAuth } = useAuth();
 
   const [form, setform] = useState<IFormField[]>([
     {
@@ -37,115 +37,156 @@ const FormSignin: React.FC<IForm> = ({ type, handleChangeForm }) => {
   ]);
 
   const formPayLoad = useMemo(() => {
-    const payload = { email: '', password:'' };
+    const payload = { email: '', password: '' };
     form.forEach((p) => {
-      return payload[p.name as 'email' | 'password'] = p.value
+      return (payload[p.name as 'email' | 'password'] = p.value);
     });
 
     return payload;
-
-  },[form]);
+  }, [form]);
 
   const handleChange = (value: string, name: string) => {
     const newValues = form.map((v) => {
-      v.name === name 
-        ? v.value = value 
-        : v;
+      v.name === name ? (v.value = value) : v;
 
       return v;
     });
     setform(newValues);
   };
 
-  const handleSignin  = async () => {
+  const handleSignin = async () => {
+
+
+    const cleanErrors = () => {
+
+      const newForm = form.map(f => {
+        f.isErrored = false;
+        return f;
+      });
+
+      setform(newForm);
+    };
+
+    try {
+      await signInFormShape.validate(formPayLoad, {abortEarly: false});
+    } catch (error) {
+      const validation = Array(error);
+      const err = (JSON.parse(JSON.stringify(validation)));
+      const { inner } = err[0];
+      
+      inner.forEach((e: {path:string,message:string }) => {
+
+        const newForm = form.map(f => {
+          f.isErrored = f.name === e.path;
+          return f;
+        });
+
+        setform(newForm);
+
+        toast.error(`Campo ${e.path}: ${e.message}`);
+      });
+      return;
+    }
+
+    cleanErrors();
+    
     fetch('http://localhost:3000/api/auth', {
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-      body:JSON.stringify(formPayLoad),
-      method:'POST'
-    }).then(res => res.json())
-    .then(res => {
-
-      if(res.token && res.user){
-        setAuth(res);
-        localStorage.setItem('@traveller-token', JSON.stringify(res));
-        Router.push('/dashboard');
-
-      }
-
-      return;
-
-  
+      body: JSON.stringify(formPayLoad),
+      method: 'POST',
     })
-    .catch(err => console.log(err))
+      .then((res) => res.json())
+      .then((res) => {
+   
+        if (res.token && res.user) {
+          setAuth(res);
+          localStorage.setItem('@traveller-token', JSON.stringify(res));
+          Router.push('/dashboard');
+        }else{
+          toast.error(`Senha ou E-mail incorretos`);
+        }
+
+        return;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
-  return type === 'forgot' ? (
-    <div className={style.container}>
-      <h2>Esqueci Minha Senha</h2>
-      <form>
-        <label htmlFor="email">E-mail </label>
-        <input
-          type="text"
-          name={form[0].name}
-          value={form[0].value}
-          id="email"
-          placeholder="E-mail"
-          onChange={(e) => handleChange(e.target.value, 'email')}
-        />
+  return (
+    <>
+      <ToastContainer />
+      {type === 'forgot' ? (
+        <div className={style.container}>
+          <h2>Esqueci Minha Senha</h2>
+          <form>
+            <label htmlFor="email">E-mail </label>
+            <input
+              type="email"
+              name={form[0].name}
+              value={form[0].value}
+              id="email"
+              placeholder="E-mail"
+              onChange={(e) => handleChange(e.target.value, 'email')}
+            />
 
-        <button>Enviar E-mail de Recuperação</button>
-      </form>
+            <button>Enviar E-mail de Recuperação</button>
+          </form>
 
-      <button
-        onClick={() => handleChangeForm('signin')}
-        className={style.changeForm}
-      >
-        <FaArrowLeft /> Voltar ao Login
-      </button>
-    </div>
-  ) : (
-    <div className={style.container}>
-      <h2>Acesso restrito</h2>
-      <form>
-        <div className={style.logo}>
-          <img src="/images/Logo.svg" alt="logo" />
+          <button
+            onClick={() => handleChangeForm('signin')}
+            className={style.changeForm}
+          >
+            <FaArrowLeft /> Voltar ao Login
+          </button>
         </div>
+      ) : (
+        <div className={style.container}>
+          <h2>Acesso restrito</h2>
+          <form>
+            <div className={style.logo}>
+              <img src="/images/Logo.svg" alt="logo" />
+            </div>
 
-        <label htmlFor="email">E-mail </label>
-        <input
-          type="text"
-          name={form[0].name}
-          id="email"
-          placeholder="E-mail"
-          value={form[0].value}
-          onChange={(e) => handleChange(e.target.value, 'email')}
-        />
+            <label htmlFor="email">E-mail </label>
+            <input
+              style={{border:`${form[0].isErrored ? 'tomato 2px solid' : ''}`}}
+              type="text"
+              name={form[0].name}
+              id="email"
+              placeholder="E-mail"
+              value={form[0].value}
+              onChange={(e) => handleChange(e.target.value, 'email')}
+            />
 
-        <label htmlFor="password">Senha </label>
-        <input
-          type="password"
-          id="password"
-          value={form[1].value}
-          name={form[1].name}
-          placeholder="Senha"
-          onChange={(e) => handleChange(e.target.value, 'password')}
-        />
-        <button type="button" onClick={ async () => await handleSignin()}
-        
-        >Acessar</button>
-      </form>
+            <label htmlFor="password">Senha </label>
+            <input
+              style={{border:`${form[1].isErrored ? 'tomato 2px solid' : ''}`}}
+              type="password"
+              id="password"
+              value={form[1].value}
+              name={form[1].name}
+              placeholder="Senha"
+              onChange={(e) => handleChange(e.target.value, 'password')}
+            />
+            <button type="button" onClick={async () => await handleSignin()}>
+              Acessar
+            </button>
+          </form>
 
-      <button
-        type="button"
-        onClick={() => handleChangeForm('forgot')}
-        className={style.changeForm}
-      >
-        Esqueci minha senha 😱 !
-      </button>
-    </div>
+          <button
+            type="button"
+            onClick={() => handleChangeForm('forgot')}
+            className={style.changeForm}
+          >
+            Esqueci minha senha 😱 !
+          </button>
+        </div>
+      )}
+    </>
   );
 };
 
@@ -160,18 +201,19 @@ const Login: React.FC = (props) => {
   );
 };
 
-
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { traveller_token } = parseCookies(ctx);
+  if (!traveller_token) return { props: {} };
 
-  const {traveller_token} = parseCookies(ctx);
-  if(!traveller_token) return { props: {} };
+  const { token, user } = JSON.parse(traveller_token);
 
-  const {token, user} = JSON.parse(traveller_token);
-  
-  return { redirect: {
-    destination: '/dashboard',
-    permanent: false,
-  } ,props: { token, user } }
-}
+  return {
+    redirect: {
+      destination: '/dashboard',
+      permanent: false,
+    },
+    props: { token, user },
+  };
+};
 
 export default Login;
