@@ -7,7 +7,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { useAuth } from '../context/useAuth';
 import Router from 'next/router';
 import { ToastContainer, toast } from 'react-toastify';
-import { string } from 'yup/lib/locale';
+import  Head  from 'next/head';
 
 interface IForm {
   type: string;
@@ -130,6 +130,9 @@ const FormSignin: React.FC<IForm> = ({ type, handleChangeForm }) => {
       <ToastContainer />
       {type === 'forgot' ? (
         <div className={style.container}>
+          <Head>
+          <title> Acesso restrito | Traveler</title>
+        </Head>
           <h2>Esqueci Minha Senha</h2>
           <form>
             <label htmlFor="email">E-mail </label>

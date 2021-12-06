@@ -1,0 +1,53 @@
+.actions {
+  width: 90vw;
+  margin: 24px 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.actions > button {
+  border: none;
+  font-weight: bold;
+  border-radius: 4px;
+  color: white;
+  height: 40px;
+  width: 160px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+.actions > button:hover {
+  filter: brightness(1.2);
+}
+
+.actions > button:nth-child(1) {
+  background: var(--primary);
+}
+
+.actions > button:nth-child(2) {
+  background: var(--secondary);
+}
+
+.actions > button:nth-child(3) {
+  background: #e23e90;
+}
+
+.downloadModelo {
+  margin: 0 auto;
+  width: 50%;
+  background: #f7f7f7;
+  border: var(--primary) 2px dashed;
+  height: 80px;
+}
+.downloadModelo button {
+  height: 100%;
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: bold;
+}

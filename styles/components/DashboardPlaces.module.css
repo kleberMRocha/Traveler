@@ -1,0 +1,10 @@
+.container {
+  padding: 0 4%;
+  text-align: center;
+}
+
+@media (max-width: 800px) {
+  .container > h2 {
+    font-size: 24px;
+  }
+}

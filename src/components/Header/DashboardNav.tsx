@@ -1,13 +1,17 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import style from '../../../styles/components/Header.module.css';
 import {FiUser, FiGlobe, FiCoffee} from 'react-icons/fi'
+import { useRouter } from 'next/router';
 
 export const NavDash: React.FC = () => {
+
+  const {asPath} = useRouter();
+
   const options = [
-    { title: 'Cadastrar um Lugar', path: '/dashboard/place', icon:"FiUser"},
-    { title: 'Cadastrar um Evento', path: '/dashboard/place', icon:"FiGlobe"},
-    { title: 'Gerenciar Avaliações', path: '/dashboard/place', icon:"FiCoffee" },
+    { title: 'Gerenciar Lugares', path: '/dashboard/place', icon:"FiGlobe"},
+    { title: 'Gerenciar Eventos', path: '/dashboard/attractions', icon:"FiCoffee"},
+    { title: 'Gerenciar Avaliações', path: '/dashboard/review', icon:"FiUser" },
   ];
 
   const Icon = (iconName:string) => {
@@ -23,8 +27,9 @@ export const NavDash: React.FC = () => {
       {options.map((opt) => {
         return (
           <Link  href={opt.path} key={opt.title}>
-              {/* className={style.active} */}
-           <a>   { Icon(opt.icon) } {opt.title} </a> 
+           <a className={ asPath === opt.path ? style.active : ''} >   
+               { Icon(opt.icon) } {opt.title}
+            </a> 
           </Link>
         );
       })}
