@@ -127,6 +127,22 @@ h6 {
   border: transparent;
 }
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.LoaderPage {
+  margin: 24px auto;
+  animation: spin 0.5s infinite linear;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: var(--primary) 2px solid;
+  border-top: var(--secondary) 2px solid;
+}
+
 @keyframes modalEntrance {
   from {
     opacity: 0.1;
