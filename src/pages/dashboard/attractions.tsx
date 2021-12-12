@@ -12,7 +12,7 @@ const PlaceDashboard = () => {
     <section className={styles.container}>
       <ToastContainer />
       <h2><FiCoffee /> Gerenciar Eventos</h2>
-      <NavManeger pageName="attractions" />
+      {/* <NavManeger pageName="attractions" /> */}
     </section>
   );
 };

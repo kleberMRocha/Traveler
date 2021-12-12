@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import styles from '../../../styles/components/NavManegerDashboard.module.css';
 import { FiUpload, FiPlus, FiTool, FiDownload, FiCheck } from 'react-icons/fi';
 import { toast } from 'react-toastify';
@@ -7,9 +7,10 @@ import LoaderPage from './LoaderPage';
 
 interface INavDashboard {
   pageName: string;
+  handleUpade: (value: any) => void; 
 }
 
-export const NavManeger: React.FC<INavDashboard> = ({ pageName }) => {
+export const NavManeger: React.FC<INavDashboard> = ({ pageName, handleUpade }) => {
   const [fileName, setFileName] = useState('');
   const [PlaceId, setPlaceID] = useState('');
   const [file, setFile] = useState({} as FileList);
@@ -37,7 +38,12 @@ export const NavManeger: React.FC<INavDashboard> = ({ pageName }) => {
       const response = await  api.post('dashboard/upload', importPlaces,{
         headers: { "Content-Type": "multipart/form-data" },
       });
-  
+
+      if(pageName === 'places'){
+        const responsePlaces = await api.get('http://localhost:4000/places/')
+        handleUpade(responsePlaces.data);
+      }
+   
       toast.info(response.data.message);
       setIsloading(false);
       setFileName('');

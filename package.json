@@ -11,6 +11,7 @@
   "dependencies": {
     "@types/cookies": "^0.7.7",
     "axios": "^0.24.0",
+    "date-fns": "^2.27.0",
     "next": "11.1.2",
     "nookies": "^2.5.2",
     "react": "17.0.2",
