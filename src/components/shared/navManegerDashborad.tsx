@@ -1,67 +1,74 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
 import styles from '../../../styles/components/NavManegerDashboard.module.css';
-import { FiUpload, FiPlus, FiTool, FiDownload, FiCheck } from 'react-icons/fi';
+import {
+  FiUpload,
+  FiPlus,
+  FiTool,
+  FiDownload,
+  FiCheck,
+  FiSearch,
+} from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import api from '../../services/axios';
 import LoaderPage from './LoaderPage';
 
 interface INavDashboard {
   pageName: string;
-  handleUpade: (value: any) => void; 
+  handleUpade: (value: any) => void;
 }
 
-export const NavManeger: React.FC<INavDashboard> = ({ pageName, handleUpade }) => {
+export const NavManeger: React.FC<INavDashboard> = ({
+  pageName,
+  handleUpade,
+}) => {
   const [fileName, setFileName] = useState('');
+  const [showForm, setShowForm] = useState(false);
   const [PlaceId, setPlaceID] = useState('');
   const [file, setFile] = useState({} as FileList);
   const [isLoading, setIsloading] = useState(false);
 
   const handleGetFile = (file: FileList | null) => {
-    if (!file) return;
-    if(file[0].type !== 'text/csv'){
+    setShowForm(false);
+    if (!file ) return;
+    if (file[0] && file[0].type !== 'text/csv') {
       toast.warn('Formato do arquivo não é valido');
       return;
     }
 
     setFile(file);
     setFileName(file[0]?.name);
-
   };
 
   const handleConfirmImport = async () => {
-
     const importPlaces = new FormData();
-    importPlaces.append('csv', file[0], file[0]?.name );
+    importPlaces.append('csv', file[0], file[0]?.name);
 
     try {
       setIsloading(true);
-      const response = await  api.post('dashboard/upload', importPlaces,{
-        headers: { "Content-Type": "multipart/form-data" },
+      const response = await api.post('dashboard/upload', importPlaces, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      if(pageName === 'places'){
-        const responsePlaces = await api.get('http://localhost:4000/places/')
+      if (pageName === 'places') {
+        const responsePlaces = await api.get('http://localhost:4000/places/');
         handleUpade(responsePlaces.data);
       }
-   
+
       toast.info(response.data.message);
       setIsloading(false);
       setFileName('');
       setFile({} as FileList);
-
-      
     } catch (error) {
       console.log(error);
       toast.error('Houve um erro na importação');
       setIsloading(false);
     }
-
   };
 
   return (
     <div>
       <nav className={styles.actions}>
-        <button>
+        <button onClick={() => setShowForm(!showForm)}>
           <FiPlus />
           Cadastrar
         </button>
@@ -83,21 +90,35 @@ export const NavManeger: React.FC<INavDashboard> = ({ pageName, handleUpade }) =
           </label>
         </button>
       </nav>
-      {
-        isLoading 
-        ? <LoaderPage /> 
-        :  <div className={styles.fileName}>
-        {fileName}
+      { showForm && <form className={styles.formCreate}>
+        <label htmlFor="nomePlace">Nome</label>
+        <input type="text" id="nomePlace" placeholder="Nome do Lugar" />
 
-        {fileName && (
-          <button className={styles.confirm} onClick={() => handleConfirmImport()}>
-            <FiCheck /> Confirmar Importação
-          </button>
-        )}
-      </div>
+        <label htmlFor="descPlace"> Resumo </label>
+        <textarea  id="descPlace" placeholder="Descrição" />
 
-      }
-     
+        <label htmlFor="imgPlace"> Imagem Lugar </label>
+        <input type="file" id="imgPlace" accept="image/png, image/jpeg" placeholder="imagem" />
+        <button type="button">
+          Cadastrar
+        </button>
+      </form> }
+      {isLoading ? (
+        <LoaderPage />
+      ) : (
+        <div className={styles.fileName}>
+          {fileName}
+
+          {fileName && (
+            <button
+              className={styles.confirm}
+              onClick={() => handleConfirmImport()}
+            >
+              <FiCheck /> Confirmar Importação
+            </button>
+          )}
+        </div>
+      )}
 
       <div
         className={styles.downloadModelo}

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import style from '../../../styles/components/Table.module.css';
-import { FiCheck, FiX, FiEdit, FiDelete, FiTrash } from 'react-icons/fi';
+import { FiCheck, FiX, FiEdit,  FiTrash } from 'react-icons/fi';
 import { format } from 'date-fns';
+import InputSearch from './InputSearch';
 
 interface ITableInfos {
   type: 'places' | 'attacttion' | 'review';
@@ -9,6 +10,13 @@ interface ITableInfos {
 }
 
 const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
+
+  useEffect(() => {
+    setInfo(info);
+  },[info]);
+
+  const [infoTable,setInfo] = useState(info);
+
   const headers = {
     places: [
       'Lugar',
@@ -23,6 +31,8 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
   };
 
   return (
+    <>
+    <InputSearch info={info} handleFilterInfo={setInfo}  />
     <table className={style.tableinfo}>
       <thead>
         <tr>
@@ -32,8 +42,8 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
         </tr>
       </thead>
       <tbody>
-          {!info.length && <tr> <td colSpan={8}> Nada encontrado </td></tr>}
-        {info.map((td) => {
+          {!infoTable.length && <tr> <td colSpan={8}> Nada encontrado </td></tr>}
+        {infoTable.map((td) => {
           return (
               <tr key={td.id}>
                 <td>{td.place_name}</td>
@@ -61,6 +71,7 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
         })}
       </tbody>
     </table>
+    </>
   );
 };
 

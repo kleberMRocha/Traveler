@@ -7,7 +7,7 @@ import styles from '../../../styles/components/DashboardPlaces.module.css';
 import LoaderPage from '../../components/shared/LoaderPage';
 import { NavManeger } from '../../components/shared/navManegerDashborad';
 import api from '../../services/axios';
-import TableInfos from './table';
+import TableInfos from '../../components/shared/table';
 
 const PlaceDashboard:React.FC = (props) => {
     const [places,setPaces] = useState([]); 
