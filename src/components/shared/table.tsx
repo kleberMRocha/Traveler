@@ -42,7 +42,7 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
         </tr>
       </thead>
       <tbody>
-          {!infoTable.length && <tr> <td colSpan={8}> Nada encontrado </td></tr>}
+          {!infoTable.length && <tr><td colSpan={8}> Nada encontrado </td></tr>}
         {infoTable.map((td) => {
           return (
               <tr key={td.id}>
@@ -55,7 +55,7 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
                     <FiX color="tomato" />
                   )}
                 </td>
-                <td>{format(new Date(td.updated_at), 'dd-MM-yyyy')}</td>
+                <td>{format(new Date(td.updated_at), 'dd/MM/yyyy')}</td>
                 <td>
                   <button>
                     <FiEdit color="#bb7c08" />

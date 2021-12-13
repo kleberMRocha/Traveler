@@ -6,7 +6,6 @@ import {
   FiTool,
   FiDownload,
   FiCheck,
-  FiSearch,
 } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import api from '../../services/axios';
@@ -21,15 +20,73 @@ export const NavManeger: React.FC<INavDashboard> = ({
   pageName,
   handleUpade,
 }) => {
+
+
+  // update
+
   const [fileName, setFileName] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [PlaceId, setPlaceID] = useState('');
   const [file, setFile] = useState({} as FileList);
   const [isLoading, setIsloading] = useState(false);
 
+  // place Form
+
+  const [placeImg, setPlaceImg] = useState({} as FileList | null);
+  const [placeName, setPlaceName] = useState('');
+  const [placeDesc, setPlaceDesc] = useState('');
+
+  const handleClearFormPlace = () => {
+    setPlaceDesc('');
+    setPlaceName('');
+    setPlaceImg({} as FileList | null);
+  };
+
+  const handleCreateNewPlace = async () => {
+   
+    if((!placeImg?.length)  || !placeName || !placeDesc){
+      toast.warn('Por favor, preencha todas as informações necessárias');
+      return
+    };
+
+    const createPlace = new FormData();
+
+    createPlace.append('img', placeImg[0], placeImg[0]?.name);
+    createPlace.append('place_name', placeName);
+    createPlace.append('place_desc', placeDesc);
+
+  
+    try {
+      setIsloading(true);
+      await api.post('places', createPlace, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      toast.success('Lugar cadastrado com sucesso !');
+      setIsloading(false);
+
+      if (pageName === 'places') {
+        const responsePlaces = await api.get('places');
+        handleUpade(responsePlaces.data);
+      }
+
+      
+      handleClearFormPlace();
+      
+    } catch (error) {
+      toast.error('Houve um erro ao cadastrar o Lugar');
+      console.log(error);
+      setIsloading(false);
+    }
+      
+   
+  };
+
+  // update Places
+
   const handleGetFile = (file: FileList | null) => {
     setShowForm(false);
-    if (!file ) return;
+    if (!file) return;
     if (file[0] && file[0].type !== 'text/csv') {
       toast.warn('Formato do arquivo não é valido');
       return;
@@ -50,7 +107,7 @@ export const NavManeger: React.FC<INavDashboard> = ({
       });
 
       if (pageName === 'places') {
-        const responsePlaces = await api.get('http://localhost:4000/places/');
+        const responsePlaces = await api.get('places');
         handleUpade(responsePlaces.data);
       }
 
@@ -72,7 +129,11 @@ export const NavManeger: React.FC<INavDashboard> = ({
           <FiPlus />
           Cadastrar
         </button>
-        <button>
+        <button onClick={() => {
+           const table = document.getElementById('table');
+           if(!table) return;
+           table.scrollIntoView({behavior:"smooth"});
+        }}>
           <FiTool />
           Gerenciar
         </button>
@@ -90,19 +151,42 @@ export const NavManeger: React.FC<INavDashboard> = ({
           </label>
         </button>
       </nav>
-      { showForm && <form className={styles.formCreate}>
-        <label htmlFor="nomePlace">Nome</label>
-        <input type="text" id="nomePlace" placeholder="Nome do Lugar" />
 
-        <label htmlFor="descPlace"> Resumo </label>
-        <textarea  id="descPlace" placeholder="Descrição" />
+      {showForm && (
+        <form className={styles.formCreate}>
+          <label htmlFor="nomePlace">Nome</label>
+          <input
+            disabled={isLoading}
+            onChange={(e) => setPlaceName(e.target.value)}
+            value={placeName}
+            type="text"
+            id="nomePlace"
+            placeholder="Nome do Lugar"
+          />
 
-        <label htmlFor="imgPlace"> Imagem Lugar </label>
-        <input type="file" id="imgPlace" accept="image/png, image/jpeg" placeholder="imagem" />
-        <button type="button">
-          Cadastrar
-        </button>
-      </form> }
+          <label htmlFor="descPlace"> Resumo </label>
+          <textarea 
+          disabled={isLoading}
+          id="descPlace"
+          onChange={(e) => setPlaceDesc(e.target.value)} 
+          value={placeDesc} 
+          placeholder="Descrição" />
+
+          <label htmlFor="imgPlace"> Imagem Lugar </label>
+          <input
+            disabled={isLoading}
+            type="file"
+            id="imgPlace"
+            accept="image/png, image/jpeg"
+            placeholder="imagem"
+            onChange={(e) => setPlaceImg(e.target.files)}
+          />
+          <button 
+          disabled={isLoading}
+          onClick={() => handleCreateNewPlace()}
+          type="button">Cadastrar</button>
+        </form>
+      )}
       {isLoading ? (
         <LoaderPage />
       ) : (

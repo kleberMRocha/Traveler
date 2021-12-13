@@ -55,7 +55,7 @@ const Rate: React.FC = () => {
 
 const Modal: React.FC = ({ children }) => {
   const { isOpen, handleOpenModal, handleNextStep, steps } = useModal();
-
+  
   return isOpen ? (
     <>
       <div

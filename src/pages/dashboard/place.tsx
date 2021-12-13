@@ -20,12 +20,16 @@ const PlaceDashboard:React.FC = (props) => {
         .finally(() => setLoading(false))
     },[]);
 
+   const handleUpade = (value :[]) => {
+    setPaces(value);
+   }
+
   return (
     <section className={styles.container}>
       <ToastContainer />
       <h2><FiGlobe /> Gerenciar Lugares</h2>
-      <NavManeger pageName="places"  handleUpade={setPaces}/>
-      <section>
+      <NavManeger pageName="places"  handleUpade={handleUpade}/>
+      <section className={styles.tableSection} id="table">
         {
           isLoading
           ? <LoaderPage />
