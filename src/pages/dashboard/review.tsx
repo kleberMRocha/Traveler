@@ -11,7 +11,7 @@ const PlaceDashboard = () => {
     <section className={styles.container}>
       <ToastContainer />
       <h2><FiUser /> Gerenciar Reviews</h2>
-      <NavManeger pageName="review" />
+      <NavManeger handleUpade={() => {}} pageName="review" />
     </section>
   );
 };
