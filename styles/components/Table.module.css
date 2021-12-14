@@ -28,6 +28,37 @@
   width: 100%;
   height: 100%;
 }
+.tableinfo td:hover {
+  cursor: pointer;
+  filter: brightness(0.8);
+}
+
+.confirmDelete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.confirmDelete button {
+  background: tomato;
+  border-radius: 5px;
+  height: 30px;
+  border: none;
+  color: #ffffff;
+  font-weight: bold;
+  transition: 1s;
+}
+
+.confirmDelete button:hover {
+  background: rgb(209, 64, 38);
+}
+
+.confirmDelete b {
+  color: tomato;
+}
+.confirmDelete u {
+  color: var(--secondary);
+}
 
 @media (max-width: 800px) {
   .tableinfo td:nth-child(2) {
