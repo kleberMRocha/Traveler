@@ -60,6 +60,11 @@
   color: var(--secondary);
 }
 
+.imgPreview {
+  position: absolute;
+  width: 180px;
+}
+
 @media (max-width: 800px) {
   .tableinfo td:nth-child(2) {
     display: none;

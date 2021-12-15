@@ -26,7 +26,10 @@ const GoToTOP: React.FC = ({ children }) => {
 
   return showButton ? (
     <>
-      <button className="goUp" onClick={() => window.scrollTo(0, 0)}>
+      <button className="goUp" onClick={() => {
+         document.body.scrollTop = 0; 
+         document.documentElement.scrollTop = 0;
+      }}>
         <FaArrowUp />
       </button>
     </>

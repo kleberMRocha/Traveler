@@ -6,6 +6,8 @@ import InputSearch from './InputSearch';
 import api from '../../services/axios';
 import { toast } from 'react-toastify';
 import LoaderPage from './LoaderPage';
+import { useModal } from '../../context/useModal';
+
 
 
 interface ITableInfos {
@@ -14,6 +16,8 @@ interface ITableInfos {
 }
 
 const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
+
+  const {handleOpenModal} = useModal();
 
   useEffect(() => {
     setInfo(info);
@@ -62,7 +66,7 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
   return (
     <>
     <InputSearch info={info} handleFilterInfo={setInfo}  />
-    
+
     {
      isLoading ? <LoaderPage /> :
       confirmDelete.place_name &&
@@ -92,9 +96,14 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
               <tr key={td.id}>
                 <td>{td.place_name}</td>
                 <td>{td.place_desc.substring(0,50)} ... </td>
-                <td>
+                <td style={{cursor:'not-allowed'}}>
                   {td.img_url.length ? (
-                    <FiCheck color="green" />
+                    <button 
+                      type="button"
+                      onClick={() =>  handleOpenModal(true, true, td.img_url )}
+                     >
+                      <FiCheck color="green" />
+                    </button>
                   ) : (
                     <FiX color="tomato" />
                   )}

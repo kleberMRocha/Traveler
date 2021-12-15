@@ -15,11 +15,16 @@ export interface IPlacesData{
 
 export interface IModal{
     isOpen:boolean;
-    handleOpenModal: (value:boolean) => void;
+    handleOpenModal: (
+        value:boolean, 
+        showImg?:boolean, 
+        img_url?: string) => void;
     handleNextStep: (value:number) => void;
     steps: number;
     handleSetRate: (value:number) => void;
     rate: number;
+    img?: string | undefined,
+    isImage: boolean
 }
 
 export interface IUser{

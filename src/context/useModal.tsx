@@ -9,8 +9,26 @@ export const ModalProvider: React.FC = ({ children }) => {
   // steps 0 = show avaliations 1 = form add avaliation 2 = success message
   const [steps, setSteps] = useState(0);
   const [rate, setRate] = useState(0);
+  const [img, setImg] = useState('');
+  const [isImage, setIsImage] = useState(false);
 
-    const handleOpenModal = (value:boolean) => {
+    const handleOpenModal = (value:boolean, showImg?: boolean, img_url?: string ) => {
+
+      if(showImg){ 
+        
+        document.body.scrollTop = 0; 
+        document.documentElement.scrollTop = 0;
+
+        setIsImage(true); 
+        setImg(img_url || '');
+        setIsOpen(value);
+        return;
+      }
+      
+        setIsImage(false);
+        setImg('');
+      
+
       if(!value && steps !== 2){
         setSteps(0);
         setRate(0);
@@ -43,7 +61,9 @@ export const ModalProvider: React.FC = ({ children }) => {
         handleNextStep,
         steps,
         rate,
-        handleSetRate
+        handleSetRate,
+        img,
+        isImage
       }}
     >
       {children}

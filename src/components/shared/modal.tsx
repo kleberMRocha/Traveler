@@ -4,6 +4,7 @@ import {
   FaStar,
   FaTimes,
 } from 'react-icons/fa';
+import { FiUpload } from 'react-icons/fi';
 import { useModal } from '../../context/useModal';
 import { AvaliationCard } from '../../pages/turism/[id]';
 
@@ -54,8 +55,31 @@ const Rate: React.FC = () => {
 };
 
 const Modal: React.FC = ({ children }) => {
-  const { isOpen, handleOpenModal, handleNextStep, steps } = useModal();
-  
+  const { isOpen, handleOpenModal, handleNextStep, steps, img, isImage } =
+    useModal();
+
+  if (isImage && img) {
+    return (
+      <>
+        <div
+          className="modalContainer"
+          onClick={() => handleOpenModal(false)}
+        ></div>
+        <div className="modal">
+          <div className="imgContainerModal">
+            <button type="button" onClick={() => handleOpenModal(false)}>
+              <FaTimes />
+            </button>
+            <img src={img} alt="Imagem" />
+          </div>
+          <button className="uploadImgModal">
+            <FiUpload /> Alterar a Imagem
+          </button>
+        </div>
+      </>
+    );
+  }
+
   return isOpen ? (
     <>
       <div
