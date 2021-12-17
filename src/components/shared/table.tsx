@@ -34,7 +34,6 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
     setInfo(info);
   }, [info]);
 
-
   const [infoTable, setInfo] = useState(info);
   const [confirmDelete, setDeleteConfirm] = useState<IDeletePlace>(
     {} as IDeletePlace
@@ -185,7 +184,7 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
                   {td.img_url.length ? (
                     <button
                       type="button"
-                      onClick={() => handleOpenModal(true, true, td.img_url)}
+                      onClick={() => handleOpenModal(true, true, td.img_url, td.id )}
                     >
                       <FiCheck color="green" />
                     </button>

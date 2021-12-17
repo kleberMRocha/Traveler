@@ -18,13 +18,15 @@ export interface IModal{
     handleOpenModal: (
         value:boolean, 
         showImg?:boolean, 
-        img_url?: string) => void;
+        img_url?: string,
+        sourceId?:string) => void;
     handleNextStep: (value:number) => void;
     steps: number;
     handleSetRate: (value:number) => void;
     rate: number;
     img?: string | undefined,
-    isImage: boolean
+    isImage: boolean,
+    sourceId?: string;
 }
 
 export interface IUser{

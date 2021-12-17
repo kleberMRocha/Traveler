@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react';
 import {
   FaComment,
   FaExclamationCircle,
@@ -5,8 +6,11 @@ import {
   FaTimes,
 } from 'react-icons/fa';
 import { FiUpload } from 'react-icons/fi';
+import { string } from 'yup';
 import { useModal } from '../../context/useModal';
 import { AvaliationCard } from '../../pages/turism/[id]';
+import api from '../../services/axios';
+import LoaderPage from './LoaderPage';
 
 const Rate: React.FC = () => {
   const { rate, handleSetRate } = useModal();
@@ -54,30 +58,87 @@ const Rate: React.FC = () => {
   );
 };
 
+interface IDisplayModal {
+  handleOpenModal: (
+    value: boolean,
+    showImg?: boolean | undefined,
+    img_url?: string | undefined
+  ) => void;
+  img: string;
+  sourceId:string;
+}
+
+const DisplayImg: React.FC<IDisplayModal> = ({ handleOpenModal, img, sourceId }) => {
+  const [isLoading, setLaoding] = useState(false);
+
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  const handleUpdateImg = async (value: FileList) => {
+    const objectUrl = value[0] ? URL.createObjectURL(value[0]) : false;
+    if (!imgRef.current) return;
+
+    const file = new FormData();
+    file.append('img', value[0], value[0]?.name);
+
+    try {
+      setLaoding(true);
+      await api.put(`places/img/${sourceId}`,file);
+      setLaoding(false);
+      
+    } catch (error) {
+      console.log(error);
+      setLaoding(false);
+    }
+  
+
+    imgRef.current.src = objectUrl || imgRef.current.src;
+  };
+
+  return (
+    <>
+      <div
+        className="modalContainer"
+        onClick={() => handleOpenModal(false)}
+      ></div>
+      <div className="modal">
+        <div className="imgContainerModal">
+          <button type="button" onClick={() => handleOpenModal(false)}>
+            <FaTimes />
+          </button>
+          {isLoading ? (
+            <LoaderPage />
+          ) : (
+            <img src={img} alt="Imagem" ref={imgRef} />
+          )}
+        </div>
+        <label htmlFor="updateFileImgPlace" className="uploadImgModal">
+          <input
+            onChange={(e) => {
+              if (e.target.files) {
+                handleUpdateImg(e.target.files);
+              }
+            }}
+            type="file"
+            id="updateFileImgPlace"
+            style={{ display: 'none' }}
+          />
+          <FiUpload /> Alterar a Imagem
+        </label>
+      </div>
+    </>
+  );
+};
+
 const Modal: React.FC = ({ children }) => {
-  const { isOpen, handleOpenModal, handleNextStep, steps, img, isImage } =
+  const { isOpen, handleOpenModal, handleNextStep, steps, img, isImage, sourceId } =
     useModal();
 
   if (isImage && img) {
-    return (
-      <>
-        <div
-          className="modalContainer"
-          onClick={() => handleOpenModal(false)}
-        ></div>
-        <div className="modal">
-          <div className="imgContainerModal">
-            <button type="button" onClick={() => handleOpenModal(false)}>
-              <FaTimes />
-            </button>
-            <img src={img} alt="Imagem" />
-          </div>
-          <button className="uploadImgModal">
-            <FiUpload /> Alterar a Imagem
-          </button>
-        </div>
-      </>
-    );
+    return <DisplayImg 
+      img={img} 
+      handleOpenModal={handleOpenModal} 
+      sourceId={sourceId || ''}
+     />;
   }
 
   return isOpen ? (

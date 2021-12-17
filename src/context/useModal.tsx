@@ -11,8 +11,13 @@ export const ModalProvider: React.FC = ({ children }) => {
   const [rate, setRate] = useState(0);
   const [img, setImg] = useState('');
   const [isImage, setIsImage] = useState(false);
+  const [sourceId, setSourceId] = useState('ssss');
 
-    const handleOpenModal = (value:boolean, showImg?: boolean, img_url?: string ) => {
+    const handleOpenModal = (
+      value:boolean, 
+      showImg?: boolean, 
+      img_url?: string, 
+      sourceId?:string ) => {
 
       if(showImg){ 
         
@@ -21,7 +26,9 @@ export const ModalProvider: React.FC = ({ children }) => {
 
         setIsImage(true); 
         setImg(img_url || '');
+        setSourceId(sourceId || '');
         setIsOpen(value);
+        
         return;
       }
       
@@ -63,7 +70,8 @@ export const ModalProvider: React.FC = ({ children }) => {
         rate,
         handleSetRate,
         img,
-        isImage
+        isImage,
+        sourceId
       }}
     >
       {children}
