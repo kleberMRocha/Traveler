@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
 import {
   FaComment,
   FaExclamationCircle,
@@ -108,7 +109,7 @@ const DisplayImg: React.FC<IDisplayModal> = ({ handleOpenModal, img, sourceId })
           {isLoading ? (
             <LoaderPage />
           ) : (
-            <img src={img} alt="Imagem" ref={imgRef} />
+            <img src={`${img}`} alt="Imagem" ref={imgRef} />
           )}
         </div>
         <label htmlFor="updateFileImgPlace" className="uploadImgModal">
@@ -132,6 +133,14 @@ const DisplayImg: React.FC<IDisplayModal> = ({ handleOpenModal, img, sourceId })
 const Modal: React.FC = ({ children }) => {
   const { isOpen, handleOpenModal, handleNextStep, steps, img, isImage, sourceId } =
     useModal();
+    const recaptchaRef = useRef<any>(null);
+
+    const onReCAPTCHAChange = (captchaCode) => {
+      console.log(captchaCode);
+      if(recaptchaRef){
+        recaptchaRef.current.execute();
+      }
+    };
 
   if (isImage && img) {
     return <DisplayImg 
@@ -203,11 +212,19 @@ const Modal: React.FC = ({ children }) => {
                 />
               </div>
               <div className="textArea">
-                <textarea placeholder="Escreva aqui..." rows={10}></textarea>
+                <textarea placeholder="Escreva aqui..." rows={5}></textarea>
                 <p>Máximo 240 caracteres</p>
               </div>
               <div>
                 <Rate />
+              </div>
+              <div>
+                    <ReCAPTCHA 
+                      ref={recaptchaRef}
+                      size="normal"
+                      sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as string} 
+                      onChange={onReCAPTCHAChange}
+                    />
               </div>
               <div className="footer-modal">
                 <span className="alert">
