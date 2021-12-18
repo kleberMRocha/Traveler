@@ -46,7 +46,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     setUser({id:'', email:'', firstName:''});
     setToken('');
 
-    const url = 'http://localhost:3000/api/signout';
+    const url = '${process.env.NEXT_PUBLIC_DOMAIN_API_NEXt}/api/signout';
 
     await api.get(url);
 

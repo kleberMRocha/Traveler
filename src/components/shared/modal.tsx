@@ -7,7 +7,6 @@ import {
   FaTimes,
 } from 'react-icons/fa';
 import { FiUpload } from 'react-icons/fi';
-import { string } from 'yup';
 import { useModal } from '../../context/useModal';
 import { AvaliationCard } from '../../pages/turism/[id]';
 import api from '../../services/axios';
@@ -66,10 +65,14 @@ interface IDisplayModal {
     img_url?: string | undefined
   ) => void;
   img: string;
-  sourceId:string;
+  sourceId: string;
 }
 
-const DisplayImg: React.FC<IDisplayModal> = ({ handleOpenModal, img, sourceId }) => {
+const DisplayImg: React.FC<IDisplayModal> = ({
+  handleOpenModal,
+  img,
+  sourceId,
+}) => {
   const [isLoading, setLaoding] = useState(false);
 
   const imgRef = useRef<HTMLImageElement>(null);
@@ -83,14 +86,12 @@ const DisplayImg: React.FC<IDisplayModal> = ({ handleOpenModal, img, sourceId })
 
     try {
       setLaoding(true);
-      await api.put(`places/img/${sourceId}`,file);
+      await api.put(`places/img/${sourceId}`, file);
       setLaoding(false);
-      
     } catch (error) {
       console.log(error);
       setLaoding(false);
     }
-  
 
     imgRef.current.src = objectUrl || imgRef.current.src;
   };
@@ -131,23 +132,60 @@ const DisplayImg: React.FC<IDisplayModal> = ({ handleOpenModal, img, sourceId })
 };
 
 const Modal: React.FC = ({ children }) => {
-  const { isOpen, handleOpenModal, handleNextStep, steps, img, isImage, sourceId } =
-    useModal();
-    const recaptchaRef = useRef<any>(null);
+  const {
+    isOpen,
+    handleOpenModal,
+    handleNextStep,
+    steps,
+    img,
+    isImage,
+    sourceId,
+  } = useModal();
 
-    const onReCAPTCHAChange = (captchaCode) => {
-      console.log(captchaCode);
-      if(recaptchaRef){
-        recaptchaRef.current.execute();
+  const [isValidRecaptcha, setRecaptcha] = useState(false);
+
+  const recaptchaRef = useRef<any>(null);
+  const onReCAPTCHAChange = async (captchaCode: string) => {
+    if (!captchaCode) {
+      return;
+    }
+
+    try{
+      const response = await api.post(
+        `${process.env.NEXT_PUBLIC_DOMAIN_API_NEXt}/api/recaptcha`,
+        { captcha: captchaCode }
+      );
+
+      if(response.data === 'OK'){
+        setRecaptcha(true);
+      }else{
+        throw new Error('Erro na validação');
       }
-    };
+
+    }catch(err){
+      console.log(err);
+      recaptchaRef.current.reset();
+    }
+    
+
+   
+  };
+
+  const handelSubmit = () => {
+    if(!isValidRecaptcha)  return;
+    handleNextStep(2);
+    setRecaptcha(false);
+    recaptchaRef.current.reset();
+  };
 
   if (isImage && img) {
-    return <DisplayImg 
-      img={img} 
-      handleOpenModal={handleOpenModal} 
-      sourceId={sourceId || ''}
-     />;
+    return (
+      <DisplayImg
+        img={img}
+        handleOpenModal={handleOpenModal}
+        sourceId={sourceId || ''}
+      />
+    );
   }
 
   return isOpen ? (
@@ -219,12 +257,18 @@ const Modal: React.FC = ({ children }) => {
                 <Rate />
               </div>
               <div>
-                    <ReCAPTCHA 
-                      ref={recaptchaRef}
-                      size="normal"
-                      sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as string} 
-                      onChange={onReCAPTCHAChange}
-                    />
+                 
+                  <ReCAPTCHA
+                    ref={recaptchaRef}
+                    size="normal"
+                    sitekey={
+                      process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as string
+                    }
+                    onChange={
+                      onReCAPTCHAChange as (token: string | null) => void
+                    }
+                  />
+                
               </div>
               <div className="footer-modal">
                 <span className="alert">
@@ -234,7 +278,7 @@ const Modal: React.FC = ({ children }) => {
                 <button
                   type="button"
                   className="enviar"
-                  onClick={() => handleNextStep(2)}
+                  onClick={() => handelSubmit()}
                 >
                   Enviar avaliação
                 </button>
