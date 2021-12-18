@@ -99,7 +99,7 @@ const FormSignin: React.FC<IForm> = ({ type, handleChangeForm }) => {
 
     cleanErrors();
     
-    fetch('${process.env.NEXT_PUBLIC_DOMAIN_API_NEXt}/api/auth', {
+    fetch(`${process.env.NEXT_PUBLIC_DOMAIN_API_NEXT}/api/auth`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

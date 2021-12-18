@@ -15,7 +15,7 @@ const PlaceDashboard:React.FC = (props) => {
 
     useEffect(() => {
       setLoading(true);
-      api.get('http://localhost:4000/places/')
+      api.get(`${process.env.NEXT_PUBLIC_DOMAIN_API_NODE}places`)
         .then(res => { setPaces(res.data) })
         .finally(() => setLoading(false))
     },[]);

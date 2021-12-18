@@ -1,10 +1,10 @@
 import Axios from 'axios';
 import { parseCookies } from 'nookies';
 
+const nodeApi = process.env.NEXT_PUBLIC_DOMAIN_API_NODE;
 
 const api = Axios.create({
-  baseURL: 'http://localhost:4000/',
-  
+  baseURL: nodeApi,
 });
 
 const cookies = parseCookies();

@@ -152,7 +152,7 @@ const Modal: React.FC = ({ children }) => {
 
     try{
       const response = await api.post(
-        `${process.env.NEXT_PUBLIC_DOMAIN_API_NEXt}/api/recaptcha`,
+        `${process.env.NEXT_PUBLIC_DOMAIN_API_NEXT}/api/recaptcha`,
         { captcha: captchaCode }
       );
 
