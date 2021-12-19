@@ -12,8 +12,13 @@ import { AvaliationCard } from '../../pages/turism/[id]';
 import api from '../../services/axios';
 import LoaderPage from './LoaderPage';
 
-const Rate: React.FC = () => {
-  const { rate, handleSetRate } = useModal();
+interface IRate{
+  rate:number | string;
+  handleSetRate: ((value: string | number) => void);
+}
+
+const Rate: React.FC<IRate> = ({rate, handleSetRate}) => {
+  
   return (
     <div className="rate-container">
       <p>Sua nota de {rate} de 5</p>
@@ -143,7 +148,13 @@ const Modal: React.FC = ({ children }) => {
   } = useModal();
 
   const [isValidRecaptcha, setRecaptcha] = useState(false);
-
+  const [customerName, setName] = useState('');
+  const [review,setReview] = useState('');
+  const [attraction, setAttraction] = useState('');
+  const [type, setType] = useState('');
+  const [rate, setRate] = useState<string | number>('');
+  const [imageReview, setImg] = useState('');
+  
   const recaptchaRef = useRef<any>(null);
   const onReCAPTCHAChange = async (captchaCode: string) => {
     if (!captchaCode) {
@@ -241,20 +252,30 @@ const Modal: React.FC = ({ children }) => {
               <div className="form-row-01">
                 <label>
                   <a className="upload">Upload da sua foto</a>
-                  <input type="file" style={{ display: 'none' }} />
+                  <input 
+                    onChange={(e) => e.target.value} 
+                    value={imageReview} type="file" 
+                    style={{ display: 'none' }}
+                  />
                 </label>
                 <input
                   type="text"
                   name="name"
+                  onChange={(e) => setName(e.target.value)} 
+                  value={customerName}
                   placeholder="Seu nome completo"
                 />
               </div>
               <div className="textArea">
-                <textarea placeholder="Escreva aqui..." rows={5}></textarea>
+                <textarea 
+                  onChange={(e) => setReview(e.target.value)} 
+                  value={review}
+                  placeholder="Escreva aqui..." 
+                rows={5}></textarea>
                 <p>Máximo 240 caracteres</p>
               </div>
               <div>
-                <Rate />
+                <Rate handleSetRate={setRate} rate={rate} />
               </div>
               <div>
                  
