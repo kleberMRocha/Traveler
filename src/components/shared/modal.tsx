@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import {
   FaComment,
@@ -6,19 +6,18 @@ import {
   FaStar,
   FaTimes,
 } from 'react-icons/fa';
-import { FiUpload } from 'react-icons/fi';
+import { FiTrash, FiUpload } from 'react-icons/fi';
 import { useModal } from '../../context/useModal';
 import { AvaliationCard } from '../../pages/turism/[id]';
 import api from '../../services/axios';
 import LoaderPage from './LoaderPage';
 
-interface IRate{
-  rate:number | string;
-  handleSetRate: ((value: string | number) => void);
+interface IRate {
+  rate: number | string;
+  handleSetRate: (value: string | number) => void;
 }
 
-const Rate: React.FC<IRate> = ({rate, handleSetRate}) => {
-  
+const Rate: React.FC<IRate> = ({ rate, handleSetRate }) => {
   return (
     <div className="rate-container">
       <p>Sua nota de {rate} de 5</p>
@@ -149,42 +148,56 @@ const Modal: React.FC = ({ children }) => {
 
   const [isValidRecaptcha, setRecaptcha] = useState(false);
   const [customerName, setName] = useState('');
-  const [review,setReview] = useState('');
+  const [review, setReview] = useState('');
   const [attraction, setAttraction] = useState('');
   const [type, setType] = useState('');
   const [rate, setRate] = useState<string | number>('');
-  const [imageReview, setImg] = useState('');
-  
+  const [imageReview, setImg] = useState({} as FileList | null);
+
+  const fileURL = useMemo(() => {
+    return imageReview && imageReview[0]
+      ? URL.createObjectURL(imageReview[0])
+      : '';
+  }, [imageReview]);
+
   const recaptchaRef = useRef<any>(null);
   const onReCAPTCHAChange = async (captchaCode: string) => {
     if (!captchaCode) {
       return;
     }
 
-    try{
+    try {
       const response = await api.post(
         `${process.env.NEXT_PUBLIC_DOMAIN_API_NEXT}/api/recaptcha`,
         { captcha: captchaCode }
       );
 
-      if(response.data === 'OK'){
+      if (response.data === 'OK') {
         setRecaptcha(true);
-      }else{
+      } else {
         throw new Error('Erro na validação');
       }
-
-    }catch(err){
+    } catch (err) {
       console.log(err);
       recaptchaRef.current.reset();
     }
-    
-
-   
   };
 
   const handelSubmit = () => {
-    if(!isValidRecaptcha)  return;
+    console.log({
+      customerName,
+      review,
+      attraction,
+      imageReview,
+      rate,
+    });
+    if (!isValidRecaptcha) return;
+
     handleNextStep(2);
+    setName('');
+    setReview('');
+    setRate('')
+    setImg({} as FileList | null)
     setRecaptcha(false);
     recaptchaRef.current.reset();
   };
@@ -251,45 +264,59 @@ const Modal: React.FC = ({ children }) => {
             <form className="formAvaliation">
               <div className="form-row-01">
                 <label>
-                  <a className="upload">Upload da sua foto</a>
-                  <input 
-                    onChange={(e) => e.target.value} 
-                    value={imageReview} type="file" 
+                  <a className="upload" style={{ background: `${imageReview?.length ? '#51b853' : ''}` }} >Upload da sua foto</a>
+                  <input
+                    onChange={(e) => setImg(e.target.files)}
+                    type="file"
                     style={{ display: 'none' }}
                   />
                 </label>
                 <input
                   type="text"
                   name="name"
-                  onChange={(e) => setName(e.target.value)} 
+                  maxLength={30}
+                  onChange={(e) => setName(e.target.value)}
                   value={customerName}
                   placeholder="Seu nome completo"
                 />
               </div>
               <div className="textArea">
-                <textarea 
-                  onChange={(e) => setReview(e.target.value)} 
+                <textarea
+                  onChange={(e) => setReview(e.target.value)}
                   value={review}
-                  placeholder="Escreva aqui..." 
-                rows={5}></textarea>
+                  placeholder="Escreva aqui..."
+                  rows={4}
+                  maxLength={240}
+                ></textarea>
                 <p>Máximo 240 caracteres</p>
               </div>
               <div>
                 <Rate handleSetRate={setRate} rate={rate} />
               </div>
-              <div>
-                 
-                  <ReCAPTCHA
-                    ref={recaptchaRef}
-                    size="normal"
-                    sitekey={
-                      process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as string
-                    }
-                    onChange={
-                      onReCAPTCHAChange as (token: string | null) => void
-                    }
-                  />
-                
+              <div className="previewReview">
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  size="normal"
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as string}
+                  onChange={onReCAPTCHAChange as (token: string | null) => void}
+                />
+                <p>Preview</p>
+                <div
+                  className="preExemple"
+                  style={{
+                    display: imageReview?.length ? 'block' : 'none',
+                  }}
+                >
+                  <img src={fileURL || ''} alt="customer avatar" />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImg({} as FileList | null);
+                    }}
+                  >
+                    <FiTrash />
+                  </button>
+                </div>
               </div>
               <div className="footer-modal">
                 <span className="alert">
