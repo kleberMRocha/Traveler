@@ -10,6 +10,7 @@ import { FiTrash, FiUpload } from 'react-icons/fi';
 import { useModal } from '../../context/useModal';
 import { AvaliationCard } from '../../pages/turism/[id]';
 import api from '../../services/axios';
+import { reviewFormShape } from '../../services/yup';
 import LoaderPage from './LoaderPage';
 
 interface IRate {
@@ -149,10 +150,29 @@ const Modal: React.FC = ({ children }) => {
   const [isValidRecaptcha, setRecaptcha] = useState(false);
   const [customerName, setName] = useState('');
   const [review, setReview] = useState('');
-  const [attraction, setAttraction] = useState('');
-  const [type, setType] = useState('');
+  const [attraction, setAttraction] = useState(
+    '25d2ae9a-1519-479c-aaa7-49a0185020d1'
+  );
+  
   const [rate, setRate] = useState<string | number>('');
   const [imageReview, setImg] = useState({} as FileList | null);
+  const [isLoading, setIsloading] = useState(false);
+  
+  const isCompleteForm = useMemo(() => {
+    return Boolean(isValidRecaptcha 
+    && customerName.length 
+    && review.length
+    && imageReview?.length
+    && attraction
+    && rate)
+  },[isValidRecaptcha, review, imageReview, attraction, rate]);
+
+
+  const reviewInput = useRef<any>(null);
+  const nameInput = useRef<any>(null);
+  const rateInput = useRef<any>(null);
+  const imgInput = useRef<any>(null);
+
 
   const fileURL = useMemo(() => {
     return imageReview && imageReview[0]
@@ -183,23 +203,89 @@ const Modal: React.FC = ({ children }) => {
     }
   };
 
-  const handelSubmit = () => {
-    console.log({
-      customerName,
-      review,
-      attraction,
-      imageReview,
-      rate,
-    });
-    if (!isValidRecaptcha) return;
-
+  const resetForm = () => {
+    setIsloading(false);
     handleNextStep(2);
     setName('');
     setReview('');
-    setRate('')
-    setImg({} as FileList | null)
+    setRate('');
+    setImg({} as FileList | null);
+
+    nameInput.current.style = '';
+
+    reviewInput.current.style = '';
+
+    rateInput.current.style = '';
+
     setRecaptcha(false);
+
     recaptchaRef.current.reset();
+  };
+
+  const handelSubmit = async () => {
+    
+    if (!imageReview?.length) {
+      imgInput.current.style = 'background: tomato';
+      return;
+    }else{
+      imgInput.current.style = '';
+    }
+
+    if (!isValidRecaptcha) return;
+
+    try {
+      const isValid = await reviewFormShape.validate(
+        {
+          customer_name: customerName,
+          review,
+          attraction,
+          imageReview,
+          rate,
+        },
+        { abortEarly: false }
+      );
+
+      const formData = new FormData();
+      formData.append('customer_name', isValid.customer_name);
+      formData.append('review', isValid.review);
+      formData.append('rate', isValid.rate);
+      formData.append('attraction', isValid.attraction);
+      if (imageReview && imageReview[0]) {
+        formData.append('img', imageReview[0], 'imageReview');
+      }
+
+      try {
+        setIsloading(true);
+        await api.post('review', formData);
+        resetForm();
+
+      } catch (error) {
+        console.log(error);
+      }
+
+
+
+    } catch (error: any) {
+      const errors = [...error.inner];
+      console.log(errors);
+      errors.forEach((e) => {
+        console.log(e.path);
+        if (e.path === 'customer_name' && nameInput.current) {
+          nameInput.current.style = 'border: 2px solid tomato';
+        }
+
+        if (e.path === 'review' && reviewInput.current) {
+          reviewInput.current.style = 'border: 2px solid tomato';
+        }
+
+        if (e.path === 'customer_name' && rateInput.current) {
+          rateInput.current.style = 'border: 2px solid tomato';
+        }
+
+      });
+
+      return;
+    }
   };
 
   if (isImage && img) {
@@ -264,7 +350,15 @@ const Modal: React.FC = ({ children }) => {
             <form className="formAvaliation">
               <div className="form-row-01">
                 <label>
-                  <a className="upload" style={{ background: `${imageReview?.length ? '#51b853' : ''}` }} >Upload da sua foto</a>
+                  <a
+                    ref={imgInput}
+                    className="upload"
+                    style={{
+                      background: `${imageReview?.length ? '#51b853' : ''}`,
+                    }}
+                  >
+                    Upload da sua foto
+                  </a>
                   <input
                     onChange={(e) => setImg(e.target.files)}
                     type="file"
@@ -274,6 +368,7 @@ const Modal: React.FC = ({ children }) => {
                 <input
                   type="text"
                   name="name"
+                  ref={nameInput}
                   maxLength={30}
                   onChange={(e) => setName(e.target.value)}
                   value={customerName}
@@ -282,6 +377,7 @@ const Modal: React.FC = ({ children }) => {
               </div>
               <div className="textArea">
                 <textarea
+                  ref={reviewInput}
                   onChange={(e) => setReview(e.target.value)}
                   value={review}
                   placeholder="Escreva aqui..."
@@ -290,7 +386,7 @@ const Modal: React.FC = ({ children }) => {
                 ></textarea>
                 <p>Máximo 240 caracteres</p>
               </div>
-              <div>
+              <div ref={rateInput}>
                 <Rate handleSetRate={setRate} rate={rate} />
               </div>
               <div className="previewReview">
@@ -323,13 +419,20 @@ const Modal: React.FC = ({ children }) => {
                   <FaExclamationCircle />
                   <p>Sua avaliação será analisada para poder ser publicada.</p>
                 </span>
-                <button
-                  type="button"
-                  className="enviar"
-                  onClick={() => handelSubmit()}
-                >
-                  Enviar avaliação
-                </button>
+
+                {isLoading ? (
+                  <LoaderPage />
+                ) : (
+                  <button
+                    style={{background:`${!isCompleteForm ? 'gray' : ''}`}}
+                    disabled={!isCompleteForm}
+                    type="button"
+                    className="enviar"
+                    onClick={() => handelSubmit()}
+                  >
+                    Enviar avaliação
+                  </button>
+                )}
               </div>
             </form>
           )}
