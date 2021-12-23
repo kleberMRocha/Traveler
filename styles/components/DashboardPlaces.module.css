@@ -13,6 +13,86 @@
   box-shadow: 1px 1px 3px #0000006c;
 }
 
+.reviewCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #f1f1f1;
+  border-radius: 5px;
+  box-shadow: 1px 1px 8px #0000006c;
+  width: 100%;
+  gap: 8px;
+  padding: 8px;
+}
+.reviewContainer {
+  background: #f8f8f8;
+  box-shadow: 1px 1px 1px #0000006c;
+  border-radius: 5px;
+  width: 80%;
+}
+
+.reviewCard span {
+  position: relative;
+  background: #e7e7e7;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px #00000048;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  gap: 4px;
+  margin: 4px 0;
+  color: #123952;
+}
+
+.reviewCard span:hover {
+  filter: brightness(1.1);
+}
+.reviewCard span button {
+  background: #07bc0c;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  max-height: 50px;
+  height: 150px;
+  min-width: 90px;
+  align-self: center;
+}
+
+.reviewCard b {
+  position: absolute;
+  top: 0;
+}
+
+.reviewCard p {
+  max-width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 2px;
+  line-height: 150%;
+}
+
+.reviewCard small {
+  color: #91949b;
+  font-weight: bold;
+}
+
+.reviewCard small:last-child {
+  color: #ff6600;
+  font-weight: bold;
+}
+
+.reviewCard img {
+  width: 85px;
+  height: 85px;
+  border-radius: 85px;
+  margin-top: 16px;
+}
+
 @media (max-width: 800px) {
   .container > h2 {
     font-size: 24px;
