@@ -93,6 +93,29 @@
   margin-top: 16px;
 }
 
+.statusReview {
+  background: #123952;
+  color: white;
+  padding: 16px;
+  display: block;
+  border-radius: 5px 5px 0 0;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.statusReview button {
+  background: none;
+  border: 2px solid white;
+  padding: 8px;
+  border-radius: 5px;
+  transition: background 0.5s;
+}
+
+.statusReview button:hover {
+  background: var(--secondary);
+}
+
 @media (max-width: 800px) {
   .container > h2 {
     font-size: 24px;

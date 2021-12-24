@@ -16,7 +16,6 @@ try {
     path: "/",
   });
 
-
   return res.status(200).json({token: `Bearer ${token}`, user});
 
   }

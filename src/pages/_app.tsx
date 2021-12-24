@@ -7,9 +7,22 @@ import ContextProviders from '../context/index';
 import Loader from '../components/Loader';
 import Modal from '../components/shared/modal';
 import GoToTOP from '../components/shared/GoToTOP';
-
+import { parseCookies } from 'nookies';
+import api from '../services/axios';
 
 function MyApp({ Component, pageProps }: AppProps) {
+
+const cookies = parseCookies();
+const { traveller_token } = cookies;
+
+let token;
+if(traveller_token){
+ const traveller = JSON.parse(traveller_token);
+ token = traveller.token;
+}
+
+api.defaults.headers.common['Authorization'] = token || '';
+
   return (
     <>
       <ContextProviders>
