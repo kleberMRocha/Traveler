@@ -56,19 +56,11 @@ button {
   color: #26323a;
   font-weight: bold;
   padding: 8px;
-  height: 200px;
-  margin-top: 200px;
 }
 
 .footer-traveler img {
   filter: saturate(0%);
   margin: 8px 0;
-}
-
-@media (min-width: 768px) {
-  .footer-traveler {
-    margin-top: 30vh;
-  }
 }
 
 h2 {

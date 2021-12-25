@@ -1,12 +1,41 @@
-import type { GetServerSideProps, NextPage } from 'next'
-import {useRouter} from 'next/router';
-import Head from 'next/head'
+import type { GetServerSideProps, NextPage } from 'next';
+import Link from 'next/link';
+import { mock } from '../../mock/mock';
+import { useRouter } from 'next/router';
+import Head from 'next/head';
 import styles from '../../styles/Home.module.css';
 import Places from '../components/Places';
 import { parseCookies } from 'nookies';
+import { FiArrowUp, FiMail, FiStar } from 'react-icons/fi';
 
 const Home: NextPage = () => {
   const router = useRouter();
+
+  const mockDestaque = mock();
+
+  interface iPlace {
+    destaqueUm: {
+      location: string;
+      picture: string;
+      available_location: number;
+      id: string;
+    };
+  }
+
+  const Destauqes: React.FC<iPlace> = ({ destaqueUm }) => {
+    return (
+      <Link href={`location/${destaqueUm.id}`}>
+        <div>
+          <span>
+            <FiArrowUp /> Mais Visitados
+          </span>
+          <h6>{destaqueUm.location}</h6>
+
+          <img src={destaqueUm.picture} alt={destaqueUm.location} />
+        </div>
+      </Link>
+    );
+  };
 
   return (
     <div className={styles.container}>
@@ -18,31 +47,61 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.mainContent}>
-        <section>
-          <strong>Viva uma grande aventura</strong>
-          <p>Descubra locais incríveis para se visitar em cidades maravilhosas de Santa Catarina.</p>
-          <button onClick={() => router.push('/places')} className={styles.callToAction}>Descobrir todos os lugares</button>
+      <main>
+        <section className={styles.mainContent}>
+          <section>
+            <strong>Viva uma grande aventura</strong>
+            <p>
+              Descubra locais incríveis para se visitar em cidades maravilhosas
+              de Santa Catarina.
+            </p>
+            <button
+              onClick={() => router.push('/places')}
+              className={styles.callToAction}
+            >
+              Descobrir todos os lugares
+            </button>
+          </section>
+          <Places />
         </section>
-        <Places />
+        <section className={styles.newPlaces}>
+          <span className={styles.titleSection}>
+            <h2>
+              <FiStar /> Destaques - Melhores destinos
+            </h2>
+          </span>
+          {mockDestaque.map((d) => (
+            <Destauqes key={d.id} destaqueUm={d} />
+          ))}
+        </section>
+        <section className={styles.newsletter}>
+          <span className={styles.titleSection}>
+            <h2>
+              <FiMail /> Receba nossa Newsletter
+            </h2>
+          </span>
+          <div>
+            <input type="email"  placeholder=' O E-mail que deseja receber nossas novidades'/> <button>Cadastrar</button>
+          </div>
+        </section>
       </main>
-    
     </div>
-  )
-}
+  );
+};
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { traveller_token } = parseCookies(ctx);
+  if (!traveller_token) return { props: {} };
 
-  const {traveller_token} = parseCookies(ctx);
-  if(!traveller_token) return { props: {} };
+  const { token, user } = JSON.parse(traveller_token);
 
-  const {token, user} = JSON.parse(traveller_token);
-  
-  return { redirect: {
-    destination: '/dashboard',
-    permanent: false,
-  } ,props: { token, user } }
-}
+  return {
+    redirect: {
+      destination: '/dashboard',
+      permanent: false,
+    },
+    props: { token, user },
+  };
+};
 
-
-export default Home
+export default Home;

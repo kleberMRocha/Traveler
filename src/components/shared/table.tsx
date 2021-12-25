@@ -189,7 +189,10 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
                       <FiCheck color="green" />
                     </button>
                   ) : (
-                    <FiX color="tomato" />
+                    <button
+                      type="button"
+                      onClick={() => handleOpenModal(true, true, '-', td.id )}
+                    >  <FiX color="tomato" /></button>
                   )}
                 </td>
                 <td>{format(new Date(td.updated_at), 'dd/MM/yyyy')}</td>
