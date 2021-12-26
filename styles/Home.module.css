@@ -136,6 +136,13 @@
   gap: 8px;
 }
 
+.newsletter h2 {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+}
+
 .newsletter div button {
   background: #5fc462;
   border-radius: 5px;
@@ -167,7 +174,9 @@
   .newsletter,
   .newPlaces * {
     text-align: center;
+    padding: 8px;
   }
+
   .mainContent > section:nth-child(1) {
     display: block;
     min-width: 100%;
