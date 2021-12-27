@@ -117,6 +117,7 @@ h6 {
   bottom: 0;
   right: 0;
   border: transparent;
+  z-index: 9999999;
 }
 
 .imgContainerModal {

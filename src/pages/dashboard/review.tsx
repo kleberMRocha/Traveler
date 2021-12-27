@@ -9,7 +9,16 @@ import api from '../../services/axios';
 import { FiStar } from 'react-icons/fi';
 import { format } from 'date-fns';
 
-const PlaceDashboard = () => {
+
+interface IPlace{
+  places:{
+    id: string,
+    place_name: string,
+  }[]
+  attraction: [];
+}
+
+const PlaceDashboard:React.FC<IPlace> = ({places, attraction}) => {
   interface IReview {
     id: string;
     customer_name: string;
@@ -23,43 +32,93 @@ const PlaceDashboard = () => {
     isPublished: boolean;
   }
 
+  interface IAttraction{
+    id:string;
+    attraction:[]
+  }
+
+  const [allPlaces, setAllplaces] = useState(places);
+  const [placeSelect, setPlaceSelect] = useState('');
+
+  const [allAttraction, setAttraction] = useState(attraction as IAttraction[]);
+  const [comboAttraction, setComboAttractions] = useState([]);
+  const [attractionSelect, setAttractionSelect] = useState('');
+
   const [reviews, setReviews] = useState<IReview[]>([] as IReview[]);
   const [isLoading, setisLoading] = useState(false);
   const [viewFilter, setViewFilter] = useState<'all' | 'approved' | 'pedent'>(
     'all'
   );
 
-  useEffect(() => {
-    api
-      .get('review')
-      .then((res) => {
-        const reviewArray = res.data.map((r: any) => {
-          const getRate = (rate: string | []) => {
-            const array = [];
-            for (let i = 1; i < Number(rate); i++) {
-              array.push(i);
-            }
-            return array;
-          };
 
-          const review = {
-            id: r.id,
-            customer_name: r.customer_name,
-            img_url: r.img_url,
-            attraction: {
-              attraction_name: r.attraction.attraction_name,
-            },
-            review: r.review,
-            created_at: format(new Date(r.created_at), 'dd/MM/yyyy'),
-            rate: getRate(r.rate),
-            isPublished: r.isPublished,
-          };
-          return review;
-        });
-        setReviews(reviewArray);
-      })
-      .catch((err) => toast.error('Houve Um Erro'));
-  }, []);
+
+  useEffect(() => {
+    setAttractionSelect('');
+    setReviews([]);
+    if(!placeSelect)return;
+    
+      const attr = allAttraction.find((a:IAttraction) => {
+        return  a.id === placeSelect;
+      });
+   
+    if(attr){
+      setComboAttractions(attr.attraction);
+    }else{
+      setComboAttractions([]);
+    }
+
+  },[placeSelect])
+
+  useEffect(() => {
+    if(!attractionSelect){
+      setReviews([]);
+      return;
+    }
+
+    api
+    .get('review')
+    .then((res) => {
+      const reviewArray = res.data.map((r: any) => {
+        const getRate = (rate: string | []) => {
+          const array = [];
+          for (let i = 1; i < Number(rate); i++) {
+            array.push(i);
+          }
+          return array;
+        };
+
+        const review = {
+          id: r.id,
+          customer_name: r.customer_name,
+          img_url: r.img_url,
+          attraction: {
+            id: r.attraction.id,
+            attraction_name: r.attraction.attraction_name,
+          },
+          review: r.review,
+          created_at: format(new Date(r.created_at), 'dd/MM/yyyy'),
+          rate: getRate(r.rate),
+          isPublished: r.isPublished,
+        };
+        return review;
+      });
+  
+      const finalreviewArray = reviewArray.filter((r:{attraction:{id:string}}) => {
+        return r.attraction.id === attractionSelect;
+      });
+
+      console.log(finalreviewArray);
+
+      setReviews(finalreviewArray);
+    })
+    .catch((err) => toast.error('Houve Um Erro'));
+
+
+
+
+  
+  },[attractionSelect])
+
 
   const reviewsStatus = useMemo(() => {
     const statusReview = {
@@ -104,6 +163,20 @@ const PlaceDashboard = () => {
       <h2>
         <FiUser /> Gerenciar Reviews
       </h2>
+      <div className={styles.interacoes}>
+        <select  value={placeSelect} placeholder='Selecione Um Lugar' onChange={(e) => setPlaceSelect(e.target.value)}>
+        <option value={''}> Selecione ... </option>
+          {allPlaces.map((p) => <option key={p.id} value={p.id}> {p.place_name} </option>)}
+        </select>
+        <select value={attractionSelect} onChange={(e) => setAttractionSelect(e.target.value)} placeholder='Selecione' disabled={!(!!placeSelect)} >
+        <option  value={''} > Selecione ... </option>
+          {
+            comboAttraction.map((a:{id:string, attraction_name:string}) => {
+              return <option key={a.id} value={a.id}> {a.attraction_name} </option>
+            })
+          }
+        </select  >
+      </div>
       <div>
         <span className={styles.statusReview}>
           <button type="button" onClick={() => setViewFilter('approved')}>
@@ -187,6 +260,17 @@ const PlaceDashboard = () => {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { traveller_token } = parseCookies(ctx);
 
+  const response = await api.get('/places');
+  const places = response.data.filter((p:{attraction:[]}) => p.attraction.length);
+
+  const filterPlaces = response.data.filter((p:{attraction:[]}) => p.attraction.length);
+  const attraction = filterPlaces.map((p:{attraction:[], id:string}) => {
+    return {
+      id: p.id,
+      attraction: p.attraction
+    }
+  });
+
   if (!traveller_token) {
     return {
       redirect: {
@@ -197,7 +281,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  return { props: {} };
+  return { props: {places , attraction } };
 };
 
 export default PlaceDashboard;

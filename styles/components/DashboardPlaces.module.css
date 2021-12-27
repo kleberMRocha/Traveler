@@ -24,6 +24,7 @@
   width: 100%;
   gap: 8px;
   padding: 8px;
+  margin-bottom: 16px;
 }
 .reviewContainer {
   background: #f8f8f8;
@@ -114,6 +115,22 @@
 
 .statusReview button:hover {
   background: var(--secondary);
+}
+
+.interacoes {
+  width: 100%;
+  padding: 2%;
+  margin: 8px 0;
+  background-color: #ebebeb;
+  display: flex;
+  gap: 8px;
+}
+
+.interacoes select {
+  width: 100%;
+  height: 40px;
+  border-radius: 8px;
+  background: #f1f1f1;
 }
 
 @media (max-width: 800px) {
