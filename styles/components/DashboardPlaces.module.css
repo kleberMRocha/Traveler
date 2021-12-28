@@ -124,6 +124,8 @@
   background-color: #ebebeb;
   display: flex;
   gap: 8px;
+  box-shadow: 1px 1px 1px #00000028;
+  border-radius: 4px 4px 0 0;
 }
 
 .interacoes select {
@@ -131,10 +133,73 @@
   height: 40px;
   border-radius: 8px;
   background: #f1f1f1;
+  border: 2px var(--secondary) solid;
+  font-size: 14px;
+}
+
+.reviewCard span .excluirUm {
+  background: none;
+  border: 1px solid #da9311;
+}
+
+.reviewCard span .excluirUm:hover {
+  filter: brightness(0.8);
+}
+
+.reviewCard span .excluirUm svg {
+  font-size: 20px;
+  color: #da9311;
+}
+
+.confirm {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 16px;
+  margin: auto;
+  z-index: 99999;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  left: 0;
+  right: 0;
+  height: 80%;
+  width: 80%;
+  padding: 8px;
+  background: #13405ce3;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.confirm div {
+  display: flex;
+  gap: 8px;
+}
+
+.confirm div button:nth-child(1) {
+  background: #da9311;
+  color: #2c1d00;
+}
+
+.confirm div button:nth-child(2) {
+  background: none;
 }
 
 @media (max-width: 800px) {
   .container > h2 {
     font-size: 24px;
+  }
+  .reviewCard span {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+  }
+
+  .reviewCard b {
+    position: static;
+    top: 0;
   }
 }

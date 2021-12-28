@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { parseCookies } from 'nookies';
 import React, { useEffect, useMemo, useState } from 'react';
-import { FiUser } from 'react-icons/fi';
+import { FiTrash, FiUser } from 'react-icons/fi';
 import { toast, ToastContainer } from 'react-toastify';
 import styles from '../../../styles/components/DashboardPlaces.module.css';
 import LoaderPage from '../../components/shared/LoaderPage';
@@ -50,7 +50,7 @@ const PlaceDashboard:React.FC<IPlace> = ({places, attraction}) => {
     'all'
   );
 
-
+  const [idToDelete, setId] = useState('');
 
   useEffect(() => {
     setAttractionSelect('');
@@ -66,8 +66,8 @@ const PlaceDashboard:React.FC<IPlace> = ({places, attraction}) => {
     }else{
       setComboAttractions([]);
     }
-
-  },[placeSelect])
+ 
+  },[placeSelect ])
 
   useEffect(() => {
     if(!attractionSelect){
@@ -107,15 +107,9 @@ const PlaceDashboard:React.FC<IPlace> = ({places, attraction}) => {
         return r.attraction.id === attractionSelect;
       });
 
-      console.log(finalreviewArray);
-
       setReviews(finalreviewArray);
     })
     .catch((err) => toast.error('Houve Um Erro'));
-
-
-
-
   
   },[attractionSelect])
 
@@ -155,6 +149,32 @@ const PlaceDashboard:React.FC<IPlace> = ({places, attraction}) => {
     if (viewFilter === 'all') return 'flex';
     if (viewFilter === 'approved') return value ? 'flex' : 'none';
     if (viewFilter === 'pedent') return !value ? 'flex' : 'none';
+  };
+
+  const handleDeleteReview = async (id:string, confirm:boolean):Promise<void> => {
+
+    if(confirm){
+      setisLoading(true);
+      try {
+        await api.delete(`review/${idToDelete}`);
+        
+        const newReviews = reviews
+          .filter(r => r.id !== id);
+          setReviews(newReviews);
+
+        toast.success('Registro excluido com sucesso');
+      } catch (error) {
+        console.log(error);
+        toast.error('Houve Um Erro');
+      }finally{
+        setId('');
+        setisLoading(false);
+        return;
+      }
+    }
+
+    if(!idToDelete)setId(id); 
+
   };
 
   return (
@@ -224,6 +244,15 @@ const PlaceDashboard:React.FC<IPlace> = ({places, attraction}) => {
                   }`,
                 }}
               >
+                <div 
+                className={styles.confirm} 
+                style={{display: `${idToDelete === review.id ? 'flex' : 'none'}`}}>
+                  <i>Certeza que deseja Excluir essa Review?</i> 
+                  <div>
+                    <button type='button' onClick={() => handleDeleteReview(review.id,true)}>Confirmar</button>
+                    <button type='button' onClick={() => setId('')}>Cancelar</button>
+                  </div>
+                </div>
                 <img src={review.img_url} alt={review.customer_name} />
                 <b>{review.customer_name}</b>
                 <p className={styles.reviewContainer}>
@@ -237,6 +266,9 @@ const PlaceDashboard:React.FC<IPlace> = ({places, attraction}) => {
                     ))}
                   </small>
                 </p>
+                <button onClick={() => handleDeleteReview( review.id, false)} type='button' className={styles.excluirUm}>
+                  <FiTrash />
+                </button>
                 <button
                   style={{
                     background: `${review.isPublished ? 'tomato' : ''}`,
