@@ -112,7 +112,8 @@
   box-shadow: 1px 1px 3px #0000006c;
 }
 
-.formCreate input {
+.formCreate input,
+.formCreate select {
   height: 30px;
   background: #f1efef;
   border: 1px var(--primary) solid;
