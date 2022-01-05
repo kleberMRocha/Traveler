@@ -122,6 +122,9 @@
 }
 
 @media (max-width: 800px) {
+  .tableinfo .attColumns {
+    display: none;
+  }
   .tableinfo td:nth-child(2) {
     display: none;
   }
@@ -138,6 +141,15 @@
     display: none;
   }
   .tableinfo th:nth-child(4) {
+    display: none;
+  }
+  .attHeader:nth-child(5) {
+    display: none;
+  }
+  .attHeader:nth-child(6) {
+    display: none;
+  }
+  .attHeader:nth-child(8) {
     display: none;
   }
 }

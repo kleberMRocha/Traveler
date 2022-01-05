@@ -110,6 +110,16 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
     }
   };
 
+  const getTipoEvento = (value:number):string => {
+   const typesAtt = ['Alimentação',
+                'Shows',
+                'Exposição',
+                'Trilhas',
+                'Baladas / Festas'];
+
+           return typesAtt[value];     
+  };
+
   const headers = {
     places: [
       'Lugar',
@@ -119,14 +129,146 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
       'Editar',
       'Deletar',
     ],
-    attacttion: [],
+    attacttion: [
+      'Evento',
+      'Lugar',
+      'Resumo',
+      'Imagem',
+      'Tipo',
+      'Endereço',
+      'Ultima Atualização',
+      'Editar',
+      'Deletar',
+    ],
     review: [],
   };
+
+  if(type === 'attacttion'){
+    return (
+      <>
+        <InputSearch info={info} handleFilterInfo={setInfo} />
+        
+        {isLoading ? (
+          <LoaderPage />
+        ) : (
+          confirmDelete.place_name && (
+            <div className={style.confirmDelete}>
+              Certeza que deseja excluir <u>{confirmDelete.place_name}?</u>
+              <b>Essa ação será permanente</b>
+              <button onClick={() => handleDeletePlaces(confirmDelete.id)}>
+                Confirmar
+              </button>
+              <button 
+              onClick={() => setDeleteConfirm({} as IDeletePlace)}>
+                Cancelar
+              </button>
+            </div>
+          )
+        )}
+  
+        <table className={style.tableinfo}>
+          <thead>
+            <tr>
+              {headers[type].map((th) => (
+                <th className={style.attHeader} key={th} >{th}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {!infoTable.length && (
+              <tr>
+                <td colSpan={8}> Nada encontrado </td>
+              </tr>
+            )}
+            {infoTable.map((td) => {
+              return (
+                <tr key={td.id}>
+                  <td>
+                    {isEditar ? (
+                      <input type="text" onChange={(e) => {
+                        handleChangeEditPalce(e.target.value,'place_name');
+                      }} value={placeTobeEdited.place_name} />
+                    ) : (
+                      td.attraction_name
+                    )}
+                  </td>
+                  <td>
+                    {isEditar ? (
+                      <input type="text" onChange={(e) => {
+                        handleChangeEditPalce(e.target.value,'place_name');
+                      }} value={placeTobeEdited.place_name} />
+                    ) : (
+                      td.place.place_name
+                    )}
+                  </td>
+                  <td>
+                    {isEditar ? (
+                      <textarea  onChange={(e) => {
+                        handleChangeEditPalce(e.target.value,'place_desc');
+                      }} value={placeTobeEdited.place_desc} />
+                    ) : (
+                      `${td.attraction_desc.substring(0, 50)} ...`
+                    )}
+                  </td>
+                  <td style={{ cursor: 'not-allowed' }}>
+                    {td.img_url.length ? (
+                      <button
+                        type="button"
+                        onClick={() => handleOpenModal(true, true, td.img_url, td.id )}
+                      >
+                        <FiCheck color="green" />
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => handleOpenModal(true, true, '-', td.id )}
+                      >  <FiX color="tomato" /></button>
+                    )}
+                  </td>
+                  <td className={style.attColumns}>{ getTipoEvento(td.attraction_type) }</td>
+                  <td className={style.attColumns}>{ td.location }</td>
+                  <td className={style.attColumns}>{format(new Date(td.updated_at), 'dd/MM/yyyy')}</td>
+                  <td>
+                    {!isEditar ? (
+                      <button onClick={() => handleEditPlace(true, td )}>
+                        <FiEdit color="#bb7c08" />
+                      </button>
+                    ) : (
+                     <>
+                      <button  
+                        className={style.confirmEdit} 
+                        onClick={() => handleEditPlace(false, td )} 
+                      >
+                        <FiCheckCircle color="green" /> Confirmar
+                      </button>
+                      <button  
+                        className={style.goBack} 
+                        onClick={() => handleEditPlace(false)} 
+                      >
+                        <FiArrowLeft color="gray" /> Voltar
+                      </button>
+                     </>
+                    )}
+                  </td>
+                  <td>
+                    {!isEditar && <button onClick={() => setDeleteConfirm(td)}>
+                      <FiTrash color="tomato" />
+                    </button>}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </>
+    );
+   
+  }
 
   return (
     <>
       <InputSearch info={info} handleFilterInfo={setInfo} />
-
+      
       {isLoading ? (
         <LoaderPage />
       ) : (
