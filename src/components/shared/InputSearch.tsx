@@ -21,8 +21,16 @@ const InputSearch: React.FC<IIputSearch> = ({info, handleFilterInfo}) => {
         if (value.length < 2) return;
         let clone = cloneObj(info);
         let regex = new RegExp(value, 'gi');
-        clone = clone.filter((p: { place_name: String }) => {
-          return p.place_name.match(regex);
+        clone = clone.filter((p: { place_name?: String, attraction_name?:string }) => {
+          
+          if(p.place_name){
+            return p.place_name.match(regex);
+          }
+
+          if(p.attraction_name){
+            return p.attraction_name.match(regex);
+          }
+          
         });
         handleFilterInfo(clone);
     };

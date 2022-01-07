@@ -16,8 +16,10 @@ interface ITableInfos {
 }
 
 const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
-  interface IDeletePlace {
-    place_name: string;
+
+  interface IDelete{
+    attraction_name?: string;
+    place_name?: string;
     id: string;
   }
 
@@ -35,8 +37,8 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
   }, [info]);
 
   const [infoTable, setInfo] = useState(info);
-  const [confirmDelete, setDeleteConfirm] = useState<IDeletePlace>(
-    {} as IDeletePlace
+  const [confirmDelete, setDeleteConfirm] = useState<IDelete>(
+    {} as IDelete
   );
   const [isLoading, setIsLoading] = useState(false);
   const [isEditar, setIsEditar] = useState(false);
@@ -93,15 +95,19 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
     setIsEditar(action);
   };
 
-  const handleDeletePlaces = async (id: string) => {
+  const handleDelete = async (id: string) => {
     setIsLoading(true);
 
     try {
-      await api.delete(`/places/${id}`);
+
+      await type === 'attacttion' 
+        ? api.delete(`/attractions/${id}`) 
+        : api.delete(`/places/${id}`);
+
       const newTable = infoTable.filter((p) => p.id !== id);
       setInfo(newTable);
       toast.success('Lugar excluido com sucesso');
-      setDeleteConfirm({} as IDeletePlace);
+      setDeleteConfirm({} as IDelete);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -151,15 +157,15 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
         {isLoading ? (
           <LoaderPage />
         ) : (
-          confirmDelete.place_name && (
+          confirmDelete.id && (
             <div className={style.confirmDelete}>
-              Certeza que deseja excluir <u>{confirmDelete.place_name}?</u>
+              Certeza que deseja excluir <u>{confirmDelete.place_name || confirmDelete.attraction_name }?</u>
               <b>Essa ação será permanente</b>
-              <button onClick={() => handleDeletePlaces(confirmDelete.id)}>
+              <button onClick={() => handleDelete(confirmDelete.id)}>
                 Confirmar
               </button>
               <button 
-              onClick={() => setDeleteConfirm({} as IDeletePlace)}>
+              onClick={() => setDeleteConfirm({} as IDelete)}>
                 Cancelar
               </button>
             </div>
@@ -177,7 +183,7 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
           <tbody>
             {!infoTable.length && (
               <tr>
-                <td colSpan={8}> Nada encontrado </td>
+                <td colSpan={9}> Nada encontrado </td>
               </tr>
             )}
             {infoTable.map((td) => {
@@ -276,11 +282,11 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
           <div className={style.confirmDelete}>
             Certeza que deseja excluir <u>{confirmDelete.place_name}?</u>
             <b>Essa ação será permanente</b>
-            <button onClick={() => handleDeletePlaces(confirmDelete.id)}>
+            <button onClick={() => handleDelete(confirmDelete.id)}>
               Confirmar
             </button>
             <button 
-            onClick={() => setDeleteConfirm({} as IDeletePlace)}>
+            onClick={() => setDeleteConfirm({} as IDelete)}>
               Cancelar
             </button>
           </div>
