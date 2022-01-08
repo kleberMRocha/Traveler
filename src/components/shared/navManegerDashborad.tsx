@@ -93,10 +93,10 @@ export const NavManeger: React.FC<INavDashboard> = ({
       toast.success('Lugar cadastrado com sucesso !');
       setIsloading(false);
 
-      if (pageName === 'places') {
-        const responsePlaces = await api.get('places');
-        handleUpade(responsePlaces.data);
-      }
+  
+      const responsePlaces = await api.get('places');
+      handleUpade(responsePlaces.data);
+      
 
       handleClearFormPlace();
     } catch (error) {
@@ -126,6 +126,9 @@ export const NavManeger: React.FC<INavDashboard> = ({
       await api.post('attractions', createAttraction, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+
+      const response = await api.get('attractions');
+      handleUpade(response.data);
 
       toast.success('Evento cadastrado com sucesso !');
       setIsloading(false);

@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/router'
 import ReCAPTCHA from 'react-google-recaptcha';
 import {
   FaComment,
@@ -82,7 +83,7 @@ const DisplayImg: React.FC<IDisplayModal> = ({
 
   const imgRef = useRef<HTMLImageElement>(null);
 
-  const handleUpdateImg = async (value: FileList) => {
+  const handleUpdateImg = async (value: FileList, type: string) => {
     const objectUrl = value[0] ? URL.createObjectURL(value[0]) : false;
     if (!imgRef.current) return;
 
@@ -91,7 +92,11 @@ const DisplayImg: React.FC<IDisplayModal> = ({
 
     try {
       setLaoding(true);
-      await api.put(`places/img/${sourceId}`, file);
+      
+      await type === 'attractions' 
+      ? api.put(`attractions/img/${sourceId}`, file)
+      : api.put(`places/img/${sourceId}`, file);
+
       setLaoding(false);
     } catch (error) {
       console.log(error);
@@ -100,6 +105,10 @@ const DisplayImg: React.FC<IDisplayModal> = ({
 
     imgRef.current.src = objectUrl || imgRef.current.src;
   };
+
+  const {asPath} = useRouter();
+
+  const type = (asPath.split('/')[2]);
 
   return (
     <>
@@ -122,7 +131,7 @@ const DisplayImg: React.FC<IDisplayModal> = ({
           <input
             onChange={(e) => {
               if (e.target.files) {
-                handleUpdateImg(e.target.files);
+                handleUpdateImg(e.target.files, type );
               }
             }}
             type="file"
@@ -269,7 +278,6 @@ const Modal: React.FC = ({ children }) => {
       const errors = [...error.inner];
       console.log(errors);
       errors.forEach((e) => {
-        console.log(e.path);
         if (e.path === 'customer_name' && nameInput.current) {
           nameInput.current.style = 'border: 2px solid tomato';
         }
