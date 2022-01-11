@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styles from '../../../styles/components/NavManegerDashboard.module.css';
 import { FiUpload, FiPlus, FiTool, FiDownload, FiCheck } from 'react-icons/fi';
 import { toast } from 'react-toastify';
@@ -40,9 +40,8 @@ export const NavManeger: React.FC<INavDashboard> = ({
   const [attImg,setAttImg] = useState({} as FileList | null);
   const imgAttInput = useRef<HTMLInputElement>(null);
 
-
+  const IsPlace = useMemo(() => pageName === 'places', [pageName]);
   useEffect(() => {
-
     api.get('places/')
     .then((res) => {
       const localListArray = res.data.map((l: {id: string, place_name :string }) => {
@@ -162,16 +161,17 @@ export const NavManeger: React.FC<INavDashboard> = ({
 
     try {
       setIsloading(true);
-      const response = await api.post('dashboard/upload', importPlaces, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+   
+        const response = await api.post(`dashboard/upload/${IsPlace ? '' : '1'}`, importPlaces, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
 
-      if (pageName === 'places') {
-        const responsePlaces = await api.get('places');
+        const responsePlaces = await api.get( IsPlace ? 'places' : 'attractions');
         handleUpade(responsePlaces.data);
-      }
 
-      toast.info(response.data.message);
+        toast.info(response.data.message);
+      
+
       setIsloading(false);
       setFileName('');
       setFile({} as FileList);
