@@ -10,7 +10,7 @@ import api from '../../services/axios';
 import TableInfos from '../../components/shared/table';
 
 const PlaceDashboard:React.FC = (props) => {
-    const [places,setPaces] = useState([]); 
+    const [places,setPaces] = useState([] as any[]); 
     const [isLoading,setLoading] = useState(false);
 
     useEffect(() => {
@@ -24,6 +24,10 @@ const PlaceDashboard:React.FC = (props) => {
     setPaces(value);
    }
 
+   const setInfoProp = (value: any[]) => {
+     setPaces(value);
+   };
+
   return (
     <section className={styles.container}>
       <ToastContainer />
@@ -33,7 +37,7 @@ const PlaceDashboard:React.FC = (props) => {
         {
           isLoading
           ? <LoaderPage />
-          : <TableInfos info={places} type="places"  />
+          : <TableInfos info={places} type="places" setInfoProp={setInfoProp}  />
         }
       </section>
     </section>

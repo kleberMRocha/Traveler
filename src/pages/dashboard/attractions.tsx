@@ -11,7 +11,7 @@ import api from '../../services/axios';
 
 
 const PlaceDashboard:React.FC = () => {
-  const [attractions,setAttractions] = useState([]);
+  const [attractions,setAttractions] = useState([] as any[]);
   const [isLoading,setLoading] = useState(false);
 
   useEffect(() => {
@@ -22,6 +22,11 @@ const PlaceDashboard:React.FC = () => {
 
   },[]);
 
+  const setInfoProp = (value: any[]) => {
+    setAttractions(value);
+  };
+
+
   return (
     <section className={styles.container}>
       <ToastContainer />
@@ -31,7 +36,7 @@ const PlaceDashboard:React.FC = () => {
         {
           isLoading
           ? <LoaderPage />
-          :   <TableInfos info={attractions} type="attacttion"  />
+          :   <TableInfos info={attractions} type="attacttion" setInfoProp={setInfoProp}  />
         }
       </section>
     

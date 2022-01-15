@@ -19,9 +19,10 @@ import { cloneObj } from '../../utils/cloneObj';
 interface ITableInfos {
   type: 'places' | 'attacttion' | 'review';
   info: any[];
+  setInfoProp: (info:any[]) => void;
 }
 
-const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
+const TableInfos: React.FC<ITableInfos> = ({ type, info, setInfoProp }) => {
   interface IDelete {
     attraction_name?: string;
     place_name?: string;
@@ -159,7 +160,7 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
           return i;
         });
 
-        setInfo(newInfo);
+        setInfoProp(newInfo);
         setIsLoading(false);
       } catch (error) {
         toast.success('Houve um erro no processo');
@@ -180,7 +181,7 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
         : api.delete(`/places/${id}`);
 
       const newTable = infoTable.filter((p) => p.id !== id);
-      setInfo(newTable);
+      setInfoProp(newTable);
       toast.success('Lugar excluido com sucesso');
       setDeleteConfirm({} as IDelete);
       setIsLoading(false);
@@ -205,6 +206,7 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
 
   const headers = {
     places: [
+      'ID',
       'Lugar',
       'Resumo',
       'Imagem',
@@ -477,6 +479,14 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info }) => {
           {infoTable.map((td) => {
             return (
               <tr key={td.id}>
+                <td>
+                    <button style={{fontSize: '10px'}} onClick={() => {
+                      navigator.clipboard.writeText(td.id);
+                      toast.info('ID copiado para área de transferência')
+                    }}>
+                       { td.id }
+                    </button>
+                </td>
                 <td>
                   {isEditar ? (
                     <input
