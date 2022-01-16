@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { toast,ToastContainer } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
 import { parseCookies } from 'nookies';
+import {ChartDash}  from '../components/Dashboard/Chart';
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
@@ -32,6 +33,9 @@ const Dashboard: NextPage = () => {
 
       <main className={styles.mainContent}>
        <h1>Dashboard</h1>
+       <ChartDash />
+       <ChartDash />
+       <ChartDash />
       </main>
     
     </div>
