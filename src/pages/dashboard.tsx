@@ -7,6 +7,11 @@ import { toast,ToastContainer } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
 import { parseCookies } from 'nookies';
 import {ChartDash}  from '../components/Dashboard/Chart';
+import { CardDashboard } from '../components/Dashboard/Card';
+
+import styleDash from '../../styles/Dashboard.module.css';
+
+
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
@@ -32,10 +37,18 @@ const Dashboard: NextPage = () => {
       </Head>
 
       <main className={styles.mainContent}>
-       <h1>Dashboard</h1>
-       <ChartDash />
-       <ChartDash />
-       <ChartDash />
+       <h1>Traveler | Dashboard</h1>
+       <div className={styleDash.containerCard}>
+          <CardDashboard/>
+          <CardDashboard/>
+          <CardDashboard/>
+        </div>
+       <div className={styleDash.containerChart}>
+        <ChartDash />
+        <ChartDash />
+        <ChartDash />
+        <ChartDash />
+       </div>
       </main>
     
     </div>

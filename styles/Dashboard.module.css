@@ -1,0 +1,54 @@
+.containerCard {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+  padding: 2% 8%;
+}
+
+.card {
+  background: #f3f3f3;
+  min-height: 100px;
+  width: 250px;
+  border-radius: 4px;
+  box-shadow: 1px 1px 1px #c5c5c5;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.card svg {
+  color: var(--primary);
+  font-size: 50px;
+}
+
+.card p {
+  font-size: 40px;
+}
+
+.card .cardTitle {
+  position: absolute;
+  align-self: flex-start;
+  color: var(--secondary);
+  font-weight: 600;
+}
+
+.containerChart {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.chartDash {
+  background: #f3f3f3;
+  border-radius: 4px;
+  box-shadow: 1px 1px 1px #c5c5c5;
+  width: 500px;
+  margin: auto;
+}

@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
+import styleDash from '../../../styles/Dashboard.module.css';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export const ChartDash:React.FC = () => {
@@ -29,14 +30,9 @@ export const ChartDash:React.FC = () => {
 
 
   return (
-    <div className='chart'>
+    <div className={styleDash.chartDash}>
+      <p>Eventos vs Locais</p>
     <Chart options={options} series={series} type='bar' />
-    <style jsx>{`
-      .chart {
-        width: 500px;
-        margin: auto;
-      }
-    `}</style>
   </div>
   );
 

@@ -11,6 +11,10 @@
   max-width: 30%;
 }
 
+.mainContent h1 {
+  color: var(--secondary);
+}
+
 .mainContent strong {
   color: #123952;
   font-family: Barlow;
