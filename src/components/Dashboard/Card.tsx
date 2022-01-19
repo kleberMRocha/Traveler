@@ -1,11 +1,54 @@
 import React from 'react';
 import styleDash from '../../../styles/Dashboard.module.css';
-import {FaGlobe} from 'react-icons/fa';
+import {FaCoffee, FaGlobe, FaUser} from 'react-icons/fa';
 
-export const CardDashboard:React.FC = () => {
+type IInfoCard = {
+    infos?: {
+        places?: number,
+        review?: number,
+        attractions?: number
+    },
+}
+
+type IKeysCard = ['places'] | ['review'] | ['attractions'];
+
+
+export const CardDashboard:React.FC<IInfoCard> = ({infos}) => {
+    if(!infos)return <></>
+
+    const array:IKeysCard  = (Object.keys(infos as IKeysCard)) as IKeysCard;
+    
+    const cardTiles = {
+        places:'Total De Lugares',
+        review:'Total De Reviews',
+        attractions:'Total De Eventos',
+    }
+
+
     return <div className={styleDash.card}>
-            <span className={styleDash.cardTitle} >Total De Lugares</span>
-            <span><FaGlobe /></span>
-            <span><p>350</p></span>
+            <span className={styleDash.cardTitle} >
+               {
+                   array.map(c => {
+                        return cardTiles[c];
+                   })
+               } 
+            </span>
+            <span>
+                {
+                   array.map(c => {
+                            if(c === 'review'){
+                                return   <FaUser />
+                            }
+                            if(c === 'attractions'){
+                                return  <FaCoffee />
+                            }
+                            if(c === 'places'){
+                                return     <FaGlobe />
+                            }
+                   })
+               }
+        
+            </span>
+            <span><p>{infos?.attractions || infos?.places || infos?.review }</p></span>
     </div>
 };

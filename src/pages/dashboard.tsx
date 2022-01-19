@@ -2,7 +2,7 @@ import type { GetServerSideProps, NextPage } from 'next'
 import {useRouter} from 'next/router';
 import Head from 'next/head'
 import styles from '../../styles/Home.module.css';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast,ToastContainer } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
 import { parseCookies } from 'nookies';
@@ -10,12 +10,21 @@ import {ChartDash}  from '../components/Dashboard/Chart';
 import { CardDashboard } from '../components/Dashboard/Card';
 
 import styleDash from '../../styles/Dashboard.module.css';
+import api from '../services/axios';
+import LoaderPage from '../components/shared/LoaderPage';
+
 
 
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
   const {user} = useAuth();
+
+  type ICardData = {
+    value: number;
+  };
+
+  const [cards, setCards] = useState([] as ICardData[]);
 
   useEffect(() => {
       const greetings = localStorage.getItem('@greetings');
@@ -24,6 +33,15 @@ const Dashboard: NextPage = () => {
         localStorage.setItem('@greetings', JSON.stringify(true));
       }
   },[user]);
+
+  useEffect(() => {
+
+    api.get('dashboard/card')
+    .then(res => {
+      setCards(res.data.cards)
+    });
+
+  },[]);
 
   return (
     <div className={styles.container}>
@@ -39,9 +57,15 @@ const Dashboard: NextPage = () => {
       <main className={styles.mainContent}>
        <h1>Traveler | Dashboard</h1>
        <div className={styleDash.containerCard}>
-          <CardDashboard/>
-          <CardDashboard/>
-          <CardDashboard/>
+     
+          {
+            cards.length 
+            ? cards.map((c,index) => {
+              return <CardDashboard infos={c} key={`card-${index}`}/>
+            })
+              : <LoaderPage />
+          }
+         
         </div>
        <div className={styleDash.containerChart}>
         <ChartDash />
@@ -67,7 +91,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       props: { },
     };
   }
-  
+
   return { props: {} };
 
 };
