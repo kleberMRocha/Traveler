@@ -13,9 +13,6 @@ import styleDash from '../../styles/Dashboard.module.css';
 import api from '../services/axios';
 import LoaderPage from '../components/shared/LoaderPage';
 
-
-
-
 const Dashboard: NextPage = () => {
   const router = useRouter();
   const {user} = useAuth();
@@ -61,7 +58,7 @@ const Dashboard: NextPage = () => {
           {
             cards.length 
             ? cards.map((c,index) => {
-              return <CardDashboard infos={c} key={`card-${index}`}/>
+              return <CardDashboard infos={c as any} key={`card-${index}`}/>
             })
               : <LoaderPage />
           }
