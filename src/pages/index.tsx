@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import styles from '../../styles/Home.module.css';
 import Places from '../components/Places';
+import Slider from "react-slick";
 import { parseCookies } from 'nookies';
 import { FiArrowUp, FiMail, FiStar } from 'react-icons/fi';
 
@@ -22,10 +23,10 @@ const Home: NextPage = () => {
     };
   }
 
-  const Destauqes: React.FC<iPlace> = ({ destaqueUm }) => {
+  const Destaques: React.FC<iPlace> = ({ destaqueUm }) => {
     return (
       <Link href={`location/${destaqueUm.id}`}>
-        <div>
+        <div className={styles.newPlacesCard}>
           <span>
             <FiArrowUp /> Mais Visitados
           </span>
@@ -36,6 +37,16 @@ const Home: NextPage = () => {
       </Link>
     );
   };
+
+  const settings = {
+      infinite: true,
+      slidesToShow: 4,
+      slidesToScroll: 1,
+      autoplay: true,
+      speed: 15000,
+      autoplaySpeed: 2000,
+      cssEase: "linear"
+    };
 
   return (
     <div className={styles.container}>
@@ -64,15 +75,21 @@ const Home: NextPage = () => {
           </section>
           <Places />
         </section>
-        <section className={styles.newPlaces}>
-          <span className={styles.titleSection}>
+        <section className={styles.hilightContainer}>
+     
             <h2>
               <FiStar /> Destaques - Melhores destinos
             </h2>
-          </span>
-          {mockDestaque.map((d) => (
-            <Destauqes key={d.id} destaqueUm={d} />
-          ))}
+         
+          <Slider {...settings} >
+              {mockDestaque.map((d) => (
+                <div>
+                   <Destaques key={d.id} destaqueUm={d} />
+                </div>
+            
+                ))}
+
+            </Slider>
         </section>
         <section className={styles.newsletter}>
           <span className={styles.titleSection}>
