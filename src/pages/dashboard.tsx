@@ -1,12 +1,12 @@
-import type { GetServerSideProps, NextPage } from 'next'
-import {useRouter} from 'next/router';
-import Head from 'next/head'
+import type { GetServerSideProps, NextPage } from 'next';
+import { useRouter } from 'next/router';
+import Head from 'next/head';
 import styles from '../../styles/Home.module.css';
 import { useEffect, useState } from 'react';
-import { toast,ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
 import { parseCookies } from 'nookies';
-import {ChartDash}  from '../components/Dashboard/Chart';
+import { ChartDash } from '../components/Dashboard/Chart';
 import { CardDashboard } from '../components/Dashboard/Card';
 
 import styleDash from '../../styles/Dashboard.module.css';
@@ -15,30 +15,32 @@ import LoaderPage from '../components/shared/LoaderPage';
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
-  const {user} = useAuth();
+  const { user } = useAuth();
 
   type ICardData = {
     value: number;
   };
 
   const [cards, setCards] = useState([] as ICardData[]);
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-      const greetings = localStorage.getItem('@greetings');
-      if(user.firstName && !greetings){
-        toast.success(`${user.firstName} - Boas Vindas 😀`);
-        localStorage.setItem('@greetings', JSON.stringify(true));
-      }
-  },[user]);
+    const greetings = localStorage.getItem('@greetings');
+    if (user.firstName && !greetings) {
+      toast.success(`${user.firstName} - Boas Vindas 😀`);
+      localStorage.setItem('@greetings', JSON.stringify(true));
+    }
+  }, [user]);
 
   useEffect(() => {
+    setLoading(true);
+    api.get('dashboard').then((res) => {
+      setCards(res.data.cards);
+    })
+    .catch(err => console.log(err))
+    .finally(() => setLoading(false))
 
-    api.get('dashboard/card')
-    .then(res => {
-      setCards(res.data.cards)
-    });
-
-  },[]);
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -52,45 +54,47 @@ const Dashboard: NextPage = () => {
       </Head>
 
       <main className={styles.mainContent}>
-       <h1>Traveler | Dashboard</h1>
-       <div className={styleDash.containerCard}>
-     
-          {
-            cards.length 
-            ? cards.map((c,index) => {
-              return <CardDashboard infos={c as any} key={`card-${index}`}/>
+        <h1>Traveler | Dashboard</h1>
+        <div className={styleDash.containerCard}>
+          {!isLoading ? (
+            cards.map((c, index) => {
+              const key = Object.keys(c)[0];
+              return <CardDashboard infos={c as any} key={`card-${index}-${key}`} />;
             })
-              : <LoaderPage />
-          }
-         
+          ) : (
+            <LoaderPage />
+          )}
         </div>
-       <div className={styleDash.containerChart}>
-        <ChartDash />
-        <ChartDash />
-        <ChartDash />
-        <ChartDash />
-       </div>
+        <div className={styleDash.containerChart}>
+          {!isLoading ? (
+            <>
+              <ChartDash />
+              <ChartDash />
+              <ChartDash />
+              <ChartDash />
+            </>
+          ) : (
+            <LoaderPage />
+          )}
+        </div>
       </main>
-    
     </div>
-  )
-}
+  );
+};
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { traveller_token } = parseCookies(ctx);
-  
-  if (!traveller_token){
+  if (!traveller_token) {
     return {
       redirect: {
         destination: '/',
         permanent: false,
       },
-      props: { },
+      props: {},
     };
   }
 
   return { props: {} };
-
 };
 
 export default Dashboard;

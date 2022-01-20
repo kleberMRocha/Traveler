@@ -90,6 +90,7 @@
 
 .navDash {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 16px;
   color: var(--secondary);

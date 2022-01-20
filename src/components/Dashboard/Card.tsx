@@ -37,13 +37,13 @@ export const CardDashboard:React.FC<IInfoCard> = ({infos}) => {
                 {
                    array.map(c => {
                             if(c === 'review'){
-                                return   <FaUser />
+                                return   <FaUser key={c} />
                             }
                             if(c === 'attractions'){
-                                return  <FaCoffee />
+                                return  <FaCoffee  key={c}/>
                             }
                             if(c === 'places'){
-                                return     <FaGlobe />
+                                return     <FaGlobe key={c}/>
                             }
                    })
                }
