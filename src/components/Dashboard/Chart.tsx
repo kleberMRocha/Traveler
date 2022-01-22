@@ -9,7 +9,7 @@ interface IChart{
     places: any[],
     review: any[],
   };
-  type: 'att0';
+  type: 'att0' | 'att1';
 }
 
 export const ChartDash:React.FC<IChart> = ({infos, type}) => {
@@ -19,7 +19,8 @@ export const ChartDash:React.FC<IChart> = ({infos, type}) => {
   },[infos]);
 
   const titleChart = {
-    'att0': 'Eventos Por tipo'
+    'att0': 'Eventos Por tipo',
+    'att1': 'Eventos vs Lugares',
   }
  
   const [options, setOptions] = useState({} as any);
@@ -56,8 +57,35 @@ export const ChartDash:React.FC<IChart> = ({infos, type}) => {
     
   };
 
+  const chartAttrationVsPlace = () => {
+    let  data = [{ name: "Eventos", data: [0] }]
+    const series:number[] = [];
+
+    const labels:string[] = [];
+
+    infos.places.forEach(p => {
+      labels.push(p.place_name);
+      series.push(p.attraction.length);
+    });
+
+    data = [{ name: "Eventos", data: series }]
+
+    setSeries( data );
+    setOptions({
+      plotOptions: {
+        bar: {
+          distributed: true
+        }
+      },
+      series: data,
+      labels,
+    });
+    
+  };
+
   const typeChartRender = {
-    'att0': chartAttrationByType
+    'att0': chartAttrationByType,
+    'att1': chartAttrationVsPlace
   }
  
 
@@ -68,7 +96,10 @@ export const ChartDash:React.FC<IChart> = ({infos, type}) => {
   },[]);
 
   const chartTypeEnum = (() => {
-    const enums = {att0: 'donut'}
+    const enums = {
+      att0: 'donut',
+      att1: 'bar'
+    }
 
     return enums[type];
     

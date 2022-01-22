@@ -71,6 +71,7 @@ const Dashboard: NextPage = () => {
           {!isLoading ? (
             <>
               <ChartDash infos={charts as any}  type='att0'/>
+              <ChartDash infos={charts as any}  type='att1'/>
             </>
           ) : (
             <LoaderPage />
