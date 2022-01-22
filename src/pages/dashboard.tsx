@@ -22,6 +22,7 @@ const Dashboard: NextPage = () => {
   };
 
   const [cards, setCards] = useState([] as ICardData[]);
+  const [charts, setChart] = useState({});
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -35,7 +36,8 @@ const Dashboard: NextPage = () => {
   useEffect(() => {
     setLoading(true);
     api.get('dashboard').then((res) => {
-      setCards(res.data.cards);
+        setCards(res.data.cards);
+        setChart(res.data.chart)
     })
     .catch(err => console.log(err))
     .finally(() => setLoading(false))
@@ -68,10 +70,7 @@ const Dashboard: NextPage = () => {
         <div className={styleDash.containerChart}>
           {!isLoading ? (
             <>
-              <ChartDash />
-              <ChartDash />
-              <ChartDash />
-              <ChartDash />
+              <ChartDash infos={charts as any}  type='att0'/>
             </>
           ) : (
             <LoaderPage />

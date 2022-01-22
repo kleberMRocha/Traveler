@@ -68,3 +68,8 @@
 .chartDash:hover {
   filter: brightness(1.02);
 }
+
+.chartDash p {
+  padding: 0 16px;
+  font-weight: bold;
+}
