@@ -42,6 +42,7 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info, setInfoProp }) => {
     attraction_name: string;
     attraction_desc: string;
     place: {
+      id: string;
       place_name: string;
     };
     attraction_type: string;
@@ -93,7 +94,10 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info, setInfoProp }) => {
   ) => {
     const obj: IAttractions = cloneObj(attTobeEdited);
     if (key === 'place') {
-      obj.place.place_name = value;
+      const infos = JSON.parse(value);
+
+      obj.place.place_name = infos.name;
+      obj.place.id = infos.key;
       setEditAtt(obj);
       return;
     }
@@ -130,7 +134,7 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info, setInfoProp }) => {
         attraction_name,
         attraction_type,
         location,
-        place,
+        place: place.id,
       };
 
       try {
@@ -307,9 +311,9 @@ const TableInfos: React.FC<ITableInfos> = ({ type, info, setInfoProp }) => {
                         defaultValue={attTobeEdited.place.place_name}
                       >
                         {comboplacesEdit.map(
-                          (p: { id: string; value: string }, index) => {
+                          (p: { key: string; value: string }, index) => {
                             return (
-                              <option key={`${p.id}_${index}`} value={p.id}>
+                              <option key={`${p.key}_${index}`} value={JSON.stringify({key: p.key, name: p.value})}>
                                 {p.value}
                               </option>
                             );
