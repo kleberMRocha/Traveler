@@ -9,7 +9,7 @@ interface IChart{
     places: any[],
     review: any[],
   };
-  type: 'att0' | 'att1';
+  type: 'att0' | 'att1' | 'rev0' | 'rev1';
 }
 
 export const ChartDash:React.FC<IChart> = ({infos, type}) => {
@@ -21,11 +21,89 @@ export const ChartDash:React.FC<IChart> = ({infos, type}) => {
   const titleChart = {
     'att0': 'Eventos Por tipo',
     'att1': 'Eventos vs Lugares',
+    'rev0': 'Review Aprovadas',
+    'rev1' : 'Review vs Eventos'
   }
  
   const [options, setOptions] = useState({} as any);
   const [series, setSeries] = useState([{}] as any);
 
+
+  const chartReviewApproved = () => {
+    const  data = { approval:0, pending:0 };
+
+    infos.review.forEach(r => {
+      r.isPublished 
+      ? data.approval++
+      : data.pending++
+    });
+
+    setSeries([data.approval, data.pending]);
+
+    setOptions({
+      plotOptions: {
+        pie:{
+          expandOnClick: true,
+        }
+      
+      },
+      series: data,
+      labels: [
+        'Aprovados',
+        'Pendentes'
+      ]
+    });
+    
+  };
+
+  const ChartReviewVsEventos = () => {
+    let  data = [{ name: "Eventos", data: [0] }]
+    const ids:string[] = [];
+    let series:{id:string, qtd: number}[] = [];
+
+    const labels:string[] = [];
+
+    infos.review.forEach(p => {
+      if(!ids.includes(p.attraction.id)){
+        ids.push(p.attraction.id);
+        labels.push(p.attraction.attraction_name);
+        series.push({
+          id: p.attraction.id,
+          qtd: 1
+        })
+      }else{
+       const newSeries = series.map(s => {
+          if(p.attraction.id === s.id){
+              s.qtd =  s.qtd += 1;
+          }
+
+          return s;
+          
+        })
+        series = newSeries;
+      }
+     
+
+     
+    
+    });
+
+    const seriesNumber = series.map(s => s.qtd);
+
+    data = [{ name: "Eventos", data: seriesNumber }]
+
+    setSeries( data );
+    setOptions({
+      plotOptions: {
+        bar: {
+          distributed: true
+        }
+      },
+      series: data,
+      labels,
+    });
+    
+  };
 
   const chartAttrationByType = () => {
     const  data = [0,0,0,0,0];
@@ -85,7 +163,9 @@ export const ChartDash:React.FC<IChart> = ({infos, type}) => {
 
   const typeChartRender = {
     'att0': chartAttrationByType,
-    'att1': chartAttrationVsPlace
+    'att1': chartAttrationVsPlace,
+    'rev0' : chartReviewApproved,
+    'rev1' : ChartReviewVsEventos
   }
  
 
@@ -98,7 +178,9 @@ export const ChartDash:React.FC<IChart> = ({infos, type}) => {
   const chartTypeEnum = (() => {
     const enums = {
       att0: 'donut',
-      att1: 'bar'
+      att1: 'bar',
+      rev0: 'pie',
+      rev1: 'bar'
     }
 
     return enums[type];
