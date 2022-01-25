@@ -9,7 +9,7 @@ interface IChart{
     places: any[],
     review: any[],
   };
-  type: 'att0' | 'att1' | 'rev0' | 'rev1';
+  type: 'att0' | 'att1' | 'rev0' | 'rev1' | 'pla0';
 }
 
 export const ChartDash:React.FC<IChart> = ({infos, type}) => {
@@ -22,11 +22,45 @@ export const ChartDash:React.FC<IChart> = ({infos, type}) => {
     'att0': 'Eventos Por tipo',
     'att1': 'Eventos vs Lugares',
     'rev0': 'Review Aprovadas',
-    'rev1' : 'Review vs Eventos'
+    'rev1' : 'Review vs Eventos',
+    'pla0' : 'Lugares'
   }
  
   const [options, setOptions] = useState({} as any);
   const [series, setSeries] = useState([{}] as any);
+
+  const ChartPlaces = () => {
+    const seriesPlace:any[] = [];
+
+    infos.places.map(p => {
+    
+      if(!p.attraction.length){
+        setSeries(seriesPlace);
+        return;
+      }
+
+      const eventos = p.attraction.map((e:{attraction_name: string}) => {
+        return {
+          x: e.attraction_name,
+          y: p.attraction.length
+        }
+      });
+
+      seriesPlace.push({
+        name: p.place_name,
+        data: eventos
+      });
+    });
+
+  setSeries(seriesPlace);
+  
+   setOptions({
+    legend: {
+      show: true
+    },
+  });
+    
+  };
 
 
   const chartReviewApproved = () => {
@@ -76,16 +110,11 @@ export const ChartDash:React.FC<IChart> = ({infos, type}) => {
           if(p.attraction.id === s.id){
               s.qtd =  s.qtd += 1;
           }
-
           return s;
-          
         })
         series = newSeries;
       }
      
-
-     
-    
     });
 
     const seriesNumber = series.map(s => s.qtd);
@@ -165,7 +194,8 @@ export const ChartDash:React.FC<IChart> = ({infos, type}) => {
     'att0': chartAttrationByType,
     'att1': chartAttrationVsPlace,
     'rev0' : chartReviewApproved,
-    'rev1' : ChartReviewVsEventos
+    'rev1' : ChartReviewVsEventos,
+    'pla0' : ChartPlaces
   }
  
 
@@ -180,7 +210,8 @@ export const ChartDash:React.FC<IChart> = ({infos, type}) => {
       att0: 'donut',
       att1: 'bar',
       rev0: 'pie',
-      rev1: 'bar'
+      rev1: 'bar',
+      pla0: 'treemap',
     }
 
     return enums[type];

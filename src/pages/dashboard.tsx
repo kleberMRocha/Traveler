@@ -70,6 +70,8 @@ const Dashboard: NextPage = () => {
         <div className={styleDash.containerChart}>
           {!isLoading ? (
             <>
+             <ChartDash infos={charts as any}  type='pla0'/>
+              <ChartDash infos={charts as any}  type='pla0'/>
               <ChartDash infos={charts as any}  type='rev1'/>
               <ChartDash infos={charts as any}  type='rev0'/>
               <ChartDash infos={charts as any}  type='att0'/>
