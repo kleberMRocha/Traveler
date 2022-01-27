@@ -3,154 +3,146 @@ import dynamic from 'next/dynamic';
 import styleDash from '../../../styles/Dashboard.module.css';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-interface IChart{
+interface IChart {
   infos: {
-    attractions: any[],
-    places: any[],
-    review: any[],
+    attractions: any[];
+    places: any[];
+    review: any[];
   };
   type: 'att0' | 'att1' | 'rev0' | 'rev1' | 'pla0';
 }
 
-export const ChartDash:React.FC<IChart> = ({infos, type}) => {
+export const ChartDash: React.FC<IChart> = ({ infos, type }) => {
   const hasData = useMemo(() => {
-  if(!(infos.attractions || infos.places || infos.review)) return false;
-  return  !!(infos.attractions.length || infos.places.length || infos.review.length);
-  },[infos]);
+    if (!(infos.attractions || infos.places || infos.review)) return false;
+    return !!(
+      infos.attractions.length ||
+      infos.places.length ||
+      infos.review.length
+    );
+  }, [infos]);
 
   const titleChart = {
-    'att0': 'Eventos Por tipo',
-    'att1': 'Eventos vs Lugares',
-    'rev0': 'Review Aprovadas',
-    'rev1' : 'Review vs Eventos',
-    'pla0' : 'Lugares'
-  }
- 
+    att0: 'Eventos Por tipo',
+    att1: 'Eventos vs Lugares',
+    rev0: 'Review Aprovadas',
+    rev1: 'Review vs Eventos',
+    pla0: 'Lugares - TREEMAP ',
+  };
+
   const [options, setOptions] = useState({} as any);
   const [series, setSeries] = useState([{}] as any);
 
   const ChartPlaces = () => {
-    const seriesPlace:any[] = [];
+    const seriesPlace: any[] = [];
 
-    infos.places.map(p => {
-    
-      if(!p.attraction.length){
+    infos.places.map((p) => {
+      if (!p.attraction.length) {
         setSeries(seriesPlace);
         return;
       }
 
-      const eventos = p.attraction.map((e:{attraction_name: string}) => {
+      const eventos = p.attraction.map((e: { attraction_name: string }) => {
         return {
           x: e.attraction_name,
-          y: p.attraction.length
-        }
+          y: p.attraction.length,
+        };
       });
 
       seriesPlace.push({
         name: p.place_name,
-        data: eventos
+        data: eventos,
       });
     });
 
-  setSeries(seriesPlace);
-  
-   setOptions({
-    legend: {
-      show: true
-    },
-  });
-    
+    setSeries(seriesPlace);
+
+    setOptions({
+      legend: {
+        show: true,
+      },
+    });
   };
 
-
   const chartReviewApproved = () => {
-    const  data = { approval:0, pending:0 };
+    const data = { approval: 0, pending: 0 };
 
-    infos.review.forEach(r => {
-      r.isPublished 
-      ? data.approval++
-      : data.pending++
+    infos.review.forEach((r) => {
+      r.isPublished ? data.approval++ : data.pending++;
     });
 
     setSeries([data.approval, data.pending]);
 
     setOptions({
       plotOptions: {
-        pie:{
+        pie: {
           expandOnClick: true,
-        }
-      
+        },
       },
       series: data,
-      labels: [
-        'Aprovados',
-        'Pendentes'
-      ]
+      labels: ['Aprovados', 'Pendentes'],
     });
-    
   };
 
   const ChartReviewVsEventos = () => {
-    let  data = [{ name: "Eventos", data: [0] }]
-    const ids:string[] = [];
-    let series:{id:string, qtd: number}[] = [];
+    let data = [{ name: 'Eventos', data: [0] }];
+    const ids: string[] = [];
+    let series: { id: string; qtd: number }[] = [];
 
-    const labels:string[] = [];
+    const labels: string[] = [];
 
-    infos.review.forEach(p => {
-      if(!ids.includes(p.attraction.id)){
+    infos.review.forEach((p) => {
+      if (!ids.includes(p.attraction.id)) {
         ids.push(p.attraction.id);
         labels.push(p.attraction.attraction_name);
         series.push({
           id: p.attraction.id,
-          qtd: 1
-        })
-      }else{
-       const newSeries = series.map(s => {
-          if(p.attraction.id === s.id){
-              s.qtd =  s.qtd += 1;
+          qtd: 1,
+        });
+      } else {
+        const newSeries = series.map((s) => {
+          if (p.attraction.id === s.id) {
+            s.qtd = s.qtd += 1;
           }
           return s;
-        })
+        });
         series = newSeries;
       }
-     
     });
 
-    const seriesNumber = series.map(s => s.qtd);
+    const seriesNumber = series.map((s) => s.qtd);
 
-    data = [{ name: "Eventos", data: seriesNumber }]
+    data = [{ name: 'Eventos', data: seriesNumber }];
 
-    setSeries( data );
+    setSeries(data);
     setOptions({
       plotOptions: {
         bar: {
-          distributed: true
-        }
+          distributed: true,
+        },
       },
       series: data,
       labels,
     });
-    
   };
 
   const chartAttrationByType = () => {
-    const  data = [0,0,0,0,0];
+    const data = [0, 0, 0, 0, 0];
 
-    infos.attractions.forEach(a => {
+    infos.attractions.forEach((a) => {
       data[a.attraction_type] = data[a.attraction_type] += 1;
     });
 
-    setSeries( data );
+    setSeries(data);
     setOptions({
       plotOptions: {
         pie: {
           donut: {
             labels: {
               show: true,
-            }
-          }
-        }
+            },
+          },
+        },
       },
       series: data,
       labels: [
@@ -159,51 +151,48 @@ export const ChartDash:React.FC<IChart> = ({infos, type}) => {
         'Exposição',
         'Trilhas',
         'Baladas / Festas',
-      ]
+      ],
     });
-    
   };
 
   const chartAttrationVsPlace = () => {
-    let  data = [{ name: "Eventos", data: [0] }]
-    const series:number[] = [];
+    let data = [{ name: 'Eventos', data: [0] }];
+    const series: number[] = [];
 
-    const labels:string[] = [];
+    const labels: string[] = [];
 
-    infos.places.forEach(p => {
+    infos.places.forEach((p) => {
       labels.push(p.place_name);
       series.push(p.attraction.length);
     });
 
-    data = [{ name: "Eventos", data: series }]
+    data = [{ name: 'Eventos', data: series }];
 
-    setSeries( data );
+    setSeries(data);
     setOptions({
       plotOptions: {
         bar: {
-          distributed: true
-        }
+          distributed: true,
+        },
       },
       series: data,
       labels,
     });
-    
   };
 
   const typeChartRender = {
-    'att0': chartAttrationByType,
-    'att1': chartAttrationVsPlace,
-    'rev0' : chartReviewApproved,
-    'rev1' : ChartReviewVsEventos,
-    'pla0' : ChartPlaces
-  }
- 
+    att0: chartAttrationByType,
+    att1: chartAttrationVsPlace,
+    rev0: chartReviewApproved,
+    rev1: ChartReviewVsEventos,
+    pla0: ChartPlaces,
+  };
 
   useEffect(() => {
-    if(hasData){
+    if (hasData) {
       typeChartRender[type]();
     }
-  },[]);
+  }, []);
 
   const chartTypeEnum = (() => {
     const enums = {
@@ -212,17 +201,23 @@ export const ChartDash:React.FC<IChart> = ({infos, type}) => {
       rev0: 'pie',
       rev1: 'bar',
       pla0: 'treemap',
-    }
+    };
 
     return enums[type];
-    
   })();
 
   return (
-    <div className={styleDash.chartDash}>
+    <div className={type === 'pla0' ? styleDash.chartDashfull : styleDash.chartDash}>
       <p>{titleChart[type]}</p>
-   {hasData && <Chart options={options} series={series} type={chartTypeEnum as any} /> }
-  </div>
+      {hasData && (
+        <Chart
+          width={'100%'}
+          height={type === 'pla0' ? 400 : ''}
+          options={options}
+          series={series}
+          type={chartTypeEnum as any}
+        />
+      )}
+    </div>
   );
-
 };

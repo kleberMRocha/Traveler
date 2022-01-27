@@ -65,6 +65,17 @@
   margin: auto;
   cursor: pointer;
 }
+
+.chartDashfull {
+  background: #f0f0f0;
+  border-radius: 4px;
+  box-shadow: 1px 1px 1px #b9b9b9;
+  width: 100%;
+  margin: auto;
+  cursor: pointer;
+  padding: 16px;
+}
+
 .chartDash:hover {
   filter: brightness(1.02);
 }
