@@ -1,24 +1,24 @@
 import { GetServerSideProps } from 'next';
 import { parseCookies } from 'nookies';
 import React, { useEffect, useMemo, useState } from 'react';
-import { FiTrash, FiUser } from 'react-icons/fi';
+import { FiLayers, FiTrash, FiUser } from 'react-icons/fi';
 import { toast, ToastContainer } from 'react-toastify';
 import styles from '../../../styles/components/DashboardPlaces.module.css';
 import LoaderPage from '../../components/shared/LoaderPage';
 import api from '../../services/axios';
 import { FiStar } from 'react-icons/fi';
 import { format } from 'date-fns';
+import { AxiosResponse } from 'axios';
 
-
-interface IPlace{
-  places:{
-    id: string,
-    place_name: string,
-  }[]
+interface IPlace {
+  places: {
+    id: string;
+    place_name: string;
+  }[];
   attraction: [];
 }
 
-const PlaceDashboard:React.FC<IPlace> = ({places, attraction}) => {
+const PlaceDashboard: React.FC<IPlace> = ({ places, attraction }) => {
   interface IReview {
     id: string;
     customer_name: string;
@@ -32,9 +32,9 @@ const PlaceDashboard:React.FC<IPlace> = ({places, attraction}) => {
     isPublished: boolean;
   }
 
-  interface IAttraction{
-    id:string;
-    attraction:[]
+  interface IAttraction {
+    id: string;
+    attraction: [];
   }
 
   const [allPlaces, setAllplaces] = useState(places);
@@ -55,64 +55,79 @@ const PlaceDashboard:React.FC<IPlace> = ({places, attraction}) => {
   useEffect(() => {
     setAttractionSelect('');
     setReviews([]);
-    if(!placeSelect)return;
-    
-      const attr = allAttraction.find((a:IAttraction) => {
-        return  a.id === placeSelect;
-      });
-   
-    if(attr){
+    if (!placeSelect) return;
+
+    const attr = allAttraction.find((a: IAttraction) => {
+      return a.id === placeSelect;
+    });
+
+    if (attr && attr.attraction.length) {
       setComboAttractions(attr.attraction);
-    }else{
+    } else {
       setComboAttractions([]);
     }
- 
-  },[placeSelect ])
+  }, [placeSelect]);
 
   useEffect(() => {
-    if(!attractionSelect){
+    if (!attractionSelect) {
       setReviews([]);
       return;
     }
 
     api
-    .get('review')
-    .then((res) => {
-      const reviewArray = res.data.map((r: any) => {
-        const getRate = (rate: string | []) => {
-          const array = [];
-          for (let i = 1; i < Number(rate); i++) {
-            array.push(i);
-          }
-          return array;
-        };
+      .get('review')
+      .then((res) => {
+        getDataReviews(res, false);
+      })
+      .catch((err) => toast.error('Houve Um Erro'));
+  }, [attractionSelect]);
 
-        const review = {
-          id: r.id,
-          customer_name: r.customer_name,
-          img_url: r.img_url,
-          attraction: {
-            id: r.attraction.id,
-            attraction_name: r.attraction.attraction_name,
-          },
-          review: r.review,
-          created_at: format(new Date(r.created_at), 'dd/MM/yyyy'),
-          rate: getRate(r.rate),
-          isPublished: r.isPublished,
-        };
-        return review;
-      });
-  
-      const finalreviewArray = reviewArray.filter((r:{attraction:{id:string}}) => {
-        return r.attraction.id === attractionSelect;
-      });
+  const getDataReviews = (res: AxiosResponse<any, any>, getAll: boolean) => {
+    const reviewArray = res.data.map((r: any) => {
+      const getRate = () => {
+        const rate = [];
+        for (let i = 0; i < r.rate; i++) {
+          rate.push(i);
+        }
+        return rate;
+      };
 
-      setReviews(finalreviewArray);
-    })
-    .catch((err) => toast.error('Houve Um Erro'));
-  
-  },[attractionSelect])
+      const review = {
+        id: r.id,
+        customer_name: r.customer_name,
+        img_url: r.img_url,
+        attraction: {
+          id: r.attraction.id,
+          attraction_name: r.attraction.attraction_name,
+        },
+        review: r.review,
+        created_at: format(new Date(r.created_at), 'dd/MM/yyyy'),
+        rate: getRate(),
+        isPublished: r.isPublished,
+      };
+      return review;
+    });
 
+    const finalreviewArray = reviewArray.filter(
+      (r: { attraction: { id: string } }) => {
+        return getAll ? r.attraction : r.attraction.id === attractionSelect;
+      }
+    );
+
+    setReviews(finalreviewArray);
+  };
+
+  const getAllDataReviews = async () => {
+    setisLoading(true);
+
+    api.get('review').then((res) => {
+      getDataReviews(res, true);
+    }).catch(err => console.log(err))
+    .finally(() => {
+      setisLoading(false);
+    });
+    
+  };
 
   const reviewsStatus = useMemo(() => {
     const statusReview = {
@@ -151,30 +166,30 @@ const PlaceDashboard:React.FC<IPlace> = ({places, attraction}) => {
     if (viewFilter === 'pedent') return !value ? 'flex' : 'none';
   };
 
-  const handleDeleteReview = async (id:string, confirm:boolean):Promise<void> => {
-
-    if(confirm){
+  const handleDeleteReview = async (
+    id: string,
+    confirm: boolean
+  ): Promise<void> => {
+    if (confirm) {
       setisLoading(true);
       try {
         await api.delete(`review/${idToDelete}`);
-        
-        const newReviews = reviews
-          .filter(r => r.id !== id);
-          setReviews(newReviews);
+
+        const newReviews = reviews.filter((r) => r.id !== id);
+        setReviews(newReviews);
 
         toast.success('Registro excluido com sucesso');
       } catch (error) {
         console.log(error);
         toast.error('Houve Um Erro');
-      }finally{
+      } finally {
         setId('');
         setisLoading(false);
         return;
       }
     }
 
-    if(!idToDelete)setId(id); 
-
+    if (!idToDelete) setId(id);
   };
 
   return (
@@ -184,21 +199,43 @@ const PlaceDashboard:React.FC<IPlace> = ({places, attraction}) => {
         <FiUser /> Gerenciar Reviews
       </h2>
       <div className={styles.interacoes}>
-        <select  value={placeSelect} placeholder='Selecione Um Lugar' onChange={(e) => setPlaceSelect(e.target.value)}>
-        <option value={''}> Selecione ... </option>
-          {allPlaces.map((p) => <option key={p.id} value={p.id}> {p.place_name} </option>)}
+        <select
+          value={placeSelect}
+          placeholder="Selecione Um Lugar"
+          onChange={(e) => setPlaceSelect(e.target.value)}
+        >
+          <option value={''}> Selecione ... </option>
+          {allPlaces.map((p) => (
+            <option key={p.id} value={p.id}>
+              {' '}
+              {p.place_name}{' '}
+            </option>
+          ))}
         </select>
-        <select value={attractionSelect} onChange={(e) => setAttractionSelect(e.target.value)} placeholder='Selecione' disabled={!(!!placeSelect)} >
-        <option  value={''} > Selecione ... </option>
-          {
-            comboAttraction.map((a:{id:string, attraction_name:string}) => {
-              return <option key={a.id} value={a.id}> {a.attraction_name} </option>
-            })
-          }
-        </select  >
+        <select
+          value={attractionSelect}
+          onChange={(e) => setAttractionSelect(e.target.value)}
+          placeholder="Selecione"
+          disabled={!!!placeSelect}
+        >
+          <option value={''}> Selecione ... </option>
+          {comboAttraction.map((a: { id: string; attraction_name: string }) => {
+            return (
+              <option key={a.id} value={a.id}>
+                {' '}
+                {a.attraction_name}{' '}
+              </option>
+            );
+          })}
+        </select>
       </div>
       <div>
         <span className={styles.statusReview}>
+          <div>
+            <button type='button' onClick={async () => await getAllDataReviews() }>
+              <FiLayers /> Trazer todas as Reviews
+            </button>
+          </div>
           <button type="button" onClick={() => setViewFilter('approved')}>
             Review Aprovadas: {reviewsStatus.approved}
           </button>
@@ -244,13 +281,23 @@ const PlaceDashboard:React.FC<IPlace> = ({places, attraction}) => {
                   }`,
                 }}
               >
-                <div 
-                className={styles.confirm} 
-                style={{display: `${idToDelete === review.id ? 'flex' : 'none'}`}}>
-                  <i>Certeza que deseja Excluir essa Review?</i> 
+                <div
+                  className={styles.confirm}
+                  style={{
+                    display: `${idToDelete === review.id ? 'flex' : 'none'}`,
+                  }}
+                >
+                  <i>Certeza que deseja Excluir essa Review?</i>
                   <div>
-                    <button type='button' onClick={() => handleDeleteReview(review.id,true)}>Confirmar</button>
-                    <button type='button' onClick={() => setId('')}>Cancelar</button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteReview(review.id, true)}
+                    >
+                      Confirmar
+                    </button>
+                    <button type="button" onClick={() => setId('')}>
+                      Cancelar
+                    </button>
                   </div>
                 </div>
                 <img src={review.img_url} alt={review.customer_name} />
@@ -260,13 +307,17 @@ const PlaceDashboard:React.FC<IPlace> = ({places, attraction}) => {
                   {review.review}
                   <small>{review.created_at}</small>
                   <small>
-                    {review.rate.length} -{' '}
+                    {review.rate.length} -
                     {review.rate.map((r) => (
                       <FiStar key={r} />
                     ))}
                   </small>
                 </p>
-                <button onClick={() => handleDeleteReview( review.id, false)} type='button' className={styles.excluirUm}>
+                <button
+                  onClick={() => handleDeleteReview(review.id, false)}
+                  type="button"
+                  className={styles.excluirUm}
+                >
                   <FiTrash />
                 </button>
                 <button
@@ -293,14 +344,18 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { traveller_token } = parseCookies(ctx);
 
   const response = await api.get('/places');
-  const places = response.data.filter((p:{attraction:[]}) => p.attraction.length);
+  const places = response.data.filter(
+    (p: { attraction: [] }) => p.attraction.length
+  );
 
-  const filterPlaces = response.data.filter((p:{attraction:[]}) => p.attraction.length);
-  const attraction = filterPlaces.map((p:{attraction:[], id:string}) => {
+  const filterPlaces = response.data.filter(
+    (p: { attraction: [] }) => p.attraction.length
+  );
+  const attraction = filterPlaces.map((p: { attraction: []; id: string }) => {
     return {
       id: p.id,
-      attraction: p.attraction
-    }
+      attraction: p.attraction,
+    };
   });
 
   if (!traveller_token) {
@@ -313,7 +368,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  return { props: {places , attraction } };
+  return { props: { places, attraction } };
 };
 
 export default PlaceDashboard;
