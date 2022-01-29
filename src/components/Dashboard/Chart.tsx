@@ -27,7 +27,7 @@ export const ChartDash: React.FC<IChart> = ({ infos, type }) => {
     att1: 'Eventos vs Lugares',
     rev0: 'Review Aprovadas',
     rev1: 'Review vs Eventos',
-    pla0: 'Lugares - TREEMAP ',
+    pla0: 'Lugares',
   };
 
   const [options, setOptions] = useState({} as any);
@@ -35,32 +35,35 @@ export const ChartDash: React.FC<IChart> = ({ infos, type }) => {
 
   const ChartPlaces = () => {
     const seriesPlace: any[] = [];
+    const categories: any[] = [];
 
     infos.places.map((p) => {
       if (!p.attraction.length) {
-        setSeries(seriesPlace);
+        seriesPlace.push({ name: p.place_name, data: 0 });
+        categories.push(p.place_name);
         return;
       }
 
-      const eventos = p.attraction.map((e: { attraction_name: string }) => {
-        return {
-          x: e.attraction_name,
-          y: p.attraction.length,
-        };
-      });
-
-      seriesPlace.push({
-        name: p.place_name,
-        data: eventos,
-      });
+      const eventos = p.attraction.length;
+      categories.push(p.place_name);
+      seriesPlace.push( eventos );
     });
 
-    setSeries(seriesPlace);
+    setSeries([{ data: seriesPlace }]);
 
     setOptions({
-      legend: {
-        show: true,
+      plotOptions: {
+        bar: {
+          borderRadius: 4,
+          horizontal: true,
+          dataLabels: {
+            position: 'center',
+          },
+        }
       },
+      xaxis: {
+        categories
+      }
     });
   };
 
@@ -200,7 +203,7 @@ export const ChartDash: React.FC<IChart> = ({ infos, type }) => {
       att1: 'bar',
       rev0: 'pie',
       rev1: 'bar',
-      pla0: 'treemap',
+      pla0: 'bar',
     };
 
     return enums[type];
