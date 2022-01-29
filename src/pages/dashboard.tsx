@@ -12,6 +12,7 @@ import { CardDashboard } from '../components/Dashboard/Card';
 import styleDash from '../../styles/Dashboard.module.css';
 import api from '../services/axios';
 import LoaderPage from '../components/shared/LoaderPage';
+import { FiActivity, FiBarChart2, FiFilter, FiTrash } from 'react-icons/fi';
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
@@ -21,9 +22,19 @@ const Dashboard: NextPage = () => {
     value: number;
   };
 
+  type ICharts = {
+    places: any[],
+    attractions: any[],
+    review: any[],
+  }
+
+  type ISelect = { place_name:string, id: string };
+
   const [cards, setCards] = useState([] as ICardData[]);
-  const [charts, setChart] = useState({});
+  const [charts, setChart] = useState({} as ICharts);
+  const [placesSelect, setSelect] = useState([{}] as ISelect[]);
   const [isLoading, setLoading] = useState(false);
+  const [filterValue,setFilterValue] = useState('');
 
   useEffect(() => {
     const greetings = localStorage.getItem('@greetings');
@@ -35,14 +46,32 @@ const Dashboard: NextPage = () => {
 
   useEffect(() => {
     setLoading(true);
-    api.get('dashboard').then((res) => {
+    api
+      .get('dashboard')
+      .then((res) => {
         setCards(res.data.cards);
-        setChart(res.data.chart)
-    })
-    .catch(err => console.log(err))
-    .finally(() => setLoading(false))
-
+        setChart(res.data.chart);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setLoading(false));
   }, []);
+
+ 
+
+  const [filterView, setFilterView] = useState(false);
+
+  const handleShowFilter = () => {
+    setFilterView(!filterView);
+      if(!charts.places.length) return;
+      const selectOpt = charts.places.map((p:ISelect) => {
+        return {
+          place_name: p.place_name,
+          id: p.id
+        }
+      });
+
+      setSelect(selectOpt);
+  };
 
   return (
     <div className={styles.container}>
@@ -57,24 +86,47 @@ const Dashboard: NextPage = () => {
 
       <main className={styles.mainContent}>
         <h1>Traveler | Dashboard</h1>
+        {filterValue}
+        <button type='button' className={styles.filterBtn} onClick={() => handleShowFilter()}>
+            <FiFilter /> Mostrar Filtros
+          </button>
         <div className={styleDash.containerCard}>
+          <div className={styles.filtros} style={{display: !filterView ? 'none' : 'flex'}}>
+          <fieldset className={styles.fieldsetFiltro}>
+              <legend><h5>Filtrar por Lugar</h5></legend>
+            <div className={styles.filtrosForm}>
+              <select onChange={(e) => setFilterValue(e.target.value)}>
+                <option>Selecione Um Lugar ...</option>
+                {
+                  placesSelect.map((p, index) => {
+                    return <option key={p.id+index} value={p.id}>{p.place_name}</option>
+                  })
+                }
+              </select>
+              <button> <FiBarChart2 /> Aplicar O Filtro</button> 
+              <button> <FiTrash /> Limpar Filtros</button>
+            </div>
+          </fieldset>
+          </div>
           {!isLoading ? (
             cards.map((c, index) => {
               const key = Object.keys(c)[0];
-              return <CardDashboard infos={c as any} key={`card-${index}-${key}`} />;
+              return (
+                <CardDashboard infos={c as any} key={`card-${index}-${key}`} />
+              );
             })
           ) : (
             <LoaderPage />
           )}
         </div>
-        <div className={styleDash.containerChart} >
+        <div className={styleDash.containerChart}>
           {!isLoading ? (
             <>
-              <ChartDash infos={charts as any}  type='pla0' /> 
-              <ChartDash infos={charts as any}  type='att0'/>
-              <ChartDash infos={charts as any}  type='att1'/>
-              <ChartDash infos={charts as any}  type='rev1'/>
-              <ChartDash infos={charts as any}  type='rev0'/>
+              <ChartDash infos={charts as any} type="pla0" />
+              <ChartDash infos={charts as any} type="att0" />
+              <ChartDash infos={charts as any} type="att1" />
+              <ChartDash infos={charts as any} type="rev1" />
+              <ChartDash infos={charts as any} type="rev0" />
             </>
           ) : (
             <LoaderPage />
