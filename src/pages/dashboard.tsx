@@ -23,18 +23,18 @@ const Dashboard: NextPage = () => {
   };
 
   type ICharts = {
-    places: any[],
-    attractions: any[],
-    review: any[],
-  }
+    places: any[];
+    attractions: any[];
+    review: any[];
+  };
 
-  type ISelect = { place_name:string, id: string };
+  type ISelect = { place_name: string; id: string };
 
   const [cards, setCards] = useState([] as ICardData[]);
   const [charts, setChart] = useState({} as ICharts);
   const [placesSelect, setSelect] = useState([{}] as ISelect[]);
   const [isLoading, setLoading] = useState(false);
-  const [filterValue,setFilterValue] = useState('');
+  const [filterValue, setFilterValue] = useState('');
 
   useEffect(() => {
     const greetings = localStorage.getItem('@greetings');
@@ -56,21 +56,56 @@ const Dashboard: NextPage = () => {
       .finally(() => setLoading(false));
   }, []);
 
- 
+
+  const handleFilterValues = async ():Promise<void>  => {
+    if(!filterValue)return;
+    const parms = new URLSearchParams({ id:filterValue });
+    const urlParms = parms.toString();
+    setLoading(true);
+    try {
+     const response = await api.get(`dashboard/filter?${urlParms}`);
+
+     if(response.statusText === 'OK'){
+      setCards(response.data.cards);
+      setChart(response.data.chart);
+      return;
+     } 
+
+    }catch (error) {
+      console.log(error);
+      toast.error('Hove um erro ao obter os dados!');
+    }finally{
+      setLoading(false);
+    }
+
+  };
+
+  const handleClearValues = async ():Promise<void>  => {
+    setLoading(true);
+    api
+      .get('dashboard')
+      .then((res) => {
+        setCards(res.data.cards);
+        setChart(res.data.chart);
+        
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setLoading(false));
+  }
 
   const [filterView, setFilterView] = useState(false);
 
   const handleShowFilter = () => {
     setFilterView(!filterView);
-      if(!charts.places.length) return;
-      const selectOpt = charts.places.map((p:ISelect) => {
-        return {
-          place_name: p.place_name,
-          id: p.id
-        }
-      });
+    if (!charts.places.length) return;
+    const selectOpt = charts.places.map((p: ISelect) => {
+      return {
+        place_name: p.place_name,
+        id: p.id,
+      };
+    });
 
-      setSelect(selectOpt);
+    setSelect(selectOpt);
   };
 
   return (
@@ -86,27 +121,41 @@ const Dashboard: NextPage = () => {
 
       <main className={styles.mainContent}>
         <h1>Traveler | Dashboard</h1>
-        {filterValue}
-        <button type='button' className={styles.filterBtn} onClick={() => handleShowFilter()}>
-            <FiFilter /> Mostrar Filtros
-          </button>
+        <button
+          type="button"
+          className={styles.filterBtn}
+          onClick={() => handleShowFilter()}
+        >
+          <FiFilter /> Mostrar Filtros
+        </button>
         <div className={styleDash.containerCard}>
-          <div className={styles.filtros} style={{display: !filterView ? 'none' : 'flex'}}>
-          <fieldset className={styles.fieldsetFiltro}>
-              <legend><h5>Filtrar por Lugar</h5></legend>
-            <div className={styles.filtrosForm}>
-              <select onChange={(e) => setFilterValue(e.target.value)}>
-                <option>Selecione Um Lugar ...</option>
-                {
-                  placesSelect.map((p, index) => {
-                    return <option key={p.id+index} value={p.id}>{p.place_name}</option>
-                  })
-                }
-              </select>
-              <button> <FiBarChart2 /> Aplicar O Filtro</button> 
-              <button> <FiTrash /> Limpar Filtros</button>
-            </div>
-          </fieldset>
+          <div
+            className={styles.filtros}
+            style={{ display: !filterView ? 'none' : 'flex' }}
+          >
+            <fieldset className={styles.fieldsetFiltro}>
+              <legend>
+                <h5>Filtrar por Lugar</h5>
+              </legend>
+              <div className={styles.filtrosForm}>
+                <select onChange={(e) => setFilterValue(e.target.value)}>
+                  <option value="">Selecione Um Lugar ...</option>
+                  {placesSelect.map((p, index) => {
+                    return (
+                      <option key={p.id + index} value={p.id}>
+                        {p.place_name}
+                      </option>
+                    );
+                  })}
+                </select>
+                <button type='button' onClick={async () => await handleFilterValues()}>
+                  <FiBarChart2 /> Aplicar O Filtro
+                </button>
+                <button type='button' onClick={() => handleClearValues()}>
+                  <FiTrash /> Limpar Filtros
+                </button>
+              </div>
+            </fieldset>
           </div>
           {!isLoading ? (
             cards.map((c, index) => {
